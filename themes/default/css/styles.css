@@ -9,7 +9,7 @@ html {
 	min-height: 100%;
 }
 body {
-	padding-top: 4em;
+	padding-top: 5em;
 	margin-bottom: 3.5em; /* Margin bottom by footer height */
 }
 
@@ -45,7 +45,6 @@ nav.navbar input {
 	border: 0 !important;
 }
 
-
 button.navbar-toggle {
 	border-radius: 0.2rem;
 	background-color: rgba(255, 255, 255, 0.5);
@@ -58,7 +57,7 @@ button.navbar-toggle > .icon-bar {
 	background-color: white;
 }
 input {
-	box-shadow: unset !important;
+	box-shadow: none !important;
 	border-radius: 0.2rem !important;
 }
 button {
@@ -85,36 +84,35 @@ button {
 }
 
 
-
 #chat-wrapper {
 	overflow: hidden;
-	margin: 0 auto;
 	background: #444753;
-	border-radius: 5px;
+	border-radius: 1rem;
 	padding: 0;
 }
 #chat-wrapper ul {
 	list-style-type: none;
 	padding-top: 1em;
-	
 }
+
+
 .people-list {
 	width: 23em;
 	height: 45em;
 	float: left;
 }
+
 .people-list .search {
 	position: relative;
-	padding: 20px;
+	color: white;
 }
 .people-list input {
-	border-radius: 3px;
+	border-radius: 0 !important;
 	border: none;
-	padding: 14px;
-	color: white;
+	padding: 1em;
 	background: #6A6C75;
 	width: 100%;
-	font-size: 14px;
+	font-size: 1em;
 }
 .people-list .glyphicon-search {
 	position: absolute;
@@ -122,40 +120,43 @@ button {
 	top: 0;
 	bottom: 0;
 	margin: auto;
-	height: 50px;
-	width: 50px;
-	line-height: 50px;
+	height: 48px;
+	width: 3rem;
+	line-height: 48px;
 }
+
 .people-list ul {
-	padding: 20px;
+	padding: 1em;
 	overflow-y: auto;
 	margin-bottom: 0;
+	height: 100%;
+	padding-bottom: 0;
 }
 .people-list ul li {
-	padding: 5px;
-	padding-bottom: 10px;
-	border-radius: 2.5px;
+	padding: 1rem;
+	border-radius: 1rem;
 }
 .people-list ul li.active {
 	background-color: rgba(255, 255, 255, 0.2);
 }
 .people-list img {
 	float: left;
-	height: 20px;
-	width: 20px;
+	height: 2em;
+	width: 2em;
 }
 .people-list .about {
 	float: left;
-	margin-top: 8px;
 	color: white;
-	padding-left: 8px;
+	padding-left: 1em;
 }
 .people-list .status {
-	color: #92959E;
+	color: rgba(255, 255, 255, 0.5);
 }
+
 .chat-holder {
 	position: relative;
 }
+
 .chat-holder .chat-header {
 	padding: 10px;
 	padding-left: 5px;
@@ -202,45 +203,43 @@ button {
 	font-size: 20px;
 	margin-top: 12px;
 }
+
 .chat {
-	position: relative;
-	width: 58.4em;
+	width: 58.42em;
 	height: 45em;
 	float: left;
 	display: none;
-	overflow: hidden;
 	background: #F2F5F8;
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
 	color: #434651;
 }
+
 .chat.active-chat {
 	display: block;
 }
 .chat .chat-history {
-	padding: 10px 10px 20px;
+	padding: 1em;
 	border-bottom: 2px solid white;
 }
 .chat .chat-history ul {
 	padding: 0;
 	overflow-y: scroll;
+	height: 29em;
 }
 .chat .chat-history .message-data {
-	margin-bottom: 15px;
+	margin-bottom: 15px; /* seems unused */
 }
 .chat .chat-history .message-data-time {
-	padding-left: 6px;
-	color: #a8aab1;
+	color: rgba(255, 255, 255, 0.5);
 	margin: 1em;
 }
 .chat .chat-history .message {
 	color: white;
-	padding: 10px;
+	padding: 1em;
 	line-height: 20px;
 	font-size: 15px;
-	border-radius: 7px;
-	margin-bottom: 10px;
-	width: 90%;
+	border-radius: 1rem;
+	margin-bottom: 1em;
+	width: 80%;
 	position: relative;
 }
 
@@ -254,16 +253,17 @@ button {
 .chat .chat-message {
 	padding: 15px;
 }
-.chat .chat-message textarea, .chat .chat-message input {
+.chat .chat-message textarea,
+.chat .chat-message input {
 	width: 100%;
 	border: none;
 	padding: 10px;
-	font: Arial, sans-serif;
 	margin-bottom: 10px;
 	border-radius: 5px;
 	resize: none;
 }
-.chat .chat-message .fa-file-o, .chat .chat-message .fa-file-image-o {
+.chat .chat-message .fa-file-o,
+.chat .chat-message .fa-file-image-o {
 	font-size: 16px;
 	color: gray;
 	cursor: pointer;
@@ -281,7 +281,9 @@ button {
 .chat .chat-message button:hover {
 	color: #75b1e8;
 }
-.online, .offline, .me {
+.online,
+.offline,
+.me {
 	margin-right: 3px;
 	font-size: 10px;
 }
@@ -314,6 +316,7 @@ button {
 .sidebar-visible {
 	left: 0 !important;
 }
+
 
 /* Media query for Sidebar */
 
@@ -362,7 +365,5 @@ button {
 	}
 }
 @media only screen and (min-width: 768px) {
-	#chat-wrapper {
-
-	}
+	#chat-wrapper {}
 }

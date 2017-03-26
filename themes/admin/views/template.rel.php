@@ -30,7 +30,7 @@
 
 	<body>
 		<header class="container">
-			<nav role="banner" class="navbar navbar-default">
+			<nav role="navigation" class="navbar navbar-default">
 				<div class="navbar-header pull-left">
 					<a href="<?php echo $linksDir; ?>index" class="navbar-brand"><?php echo $siteName; ?></a>
 				</div>

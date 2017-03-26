@@ -12,8 +12,8 @@
 				 '<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">', PHP_EOL,
 				 '<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">', PHP_EOL,
 				 '<script>var linksDir = \'' . $linksDir . '\';</script>', PHP_EOL,
-				 '<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>', PHP_EOL,
-				 '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>' . PHP_EOL;
+				 '<script async src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>', PHP_EOL,
+				 '<script async src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>' . PHP_EOL;
 		}
 
 		public static function textList($array) {

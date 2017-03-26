@@ -1,29 +1,4 @@
 $(function() {
-	$('img').lazyload({
-		effect: 'fadeIn'
-	});
-
-	$('body').on('hidden.bs.modal', '.modal', function() {
-		$(this).removeData('bs.modal');
-	});
-	$('#login-btn').click(function() {
-		$('#login').modal({
-			remote: this.attr(href)
-		}, 'show');
-	});
-
-	var sideSlider = $('[data-toggle=collapse-side]'),
-		sel = sideSlider.attr('data-target'),
-		sel2 = sideSlider.attr('data-target-2');
-	sideSlider.click(function(event) {
-		$(sel).toggleClass('in');
-		$(sel2).toggleClass('out');
-	});
-
-	$('#headlines-carousel').carousel({
-		interval: 2500
-	});
-
 	$('button.vote-btn').parent().on('click', 'button.vote-btn', function() {
 		var id = $(this).attr('data-id'),
 			type = $(this).attr('data-type'),
@@ -33,7 +8,7 @@ $(function() {
 			});
 
 		posting.done(function(data) {
-			var decodeddata = JSON.parse(data);
+			var decodedData = JSON.parse(data);
 			btnSelector = 'button.vote-btn[data-id=' + id + '][data-type=' + type + ']'; // Not perfect but does the trick
 
 			if (voteState === 'strip')
@@ -43,7 +18,7 @@ $(function() {
 				var btnState = $(this).attr('value');
 
 				if (btnState !== 'strip') {
-					$('span.votes-nbr', this).text(decodeddata[btnState]);
+					$('span.votes-nbr', this).text(decodedData[btnState]);
 
 					$(this).prop('disabled', function(index, value) {
 						return !value;
@@ -98,4 +73,54 @@ $(function() {
 			return false;
 		});
 	}
+
+	// Toggle Sidebar
+	$('.chat-header i.fa-bars').click(function() {
+		$('.people-list').toggleClass('sidebar-visible');
+	});
+
+	// Search for the Left Sidebar
+	var searchFilter = {
+		options: {
+			valueNames: ['name']
+		},
+		init: function() {
+			var userList = new List('people-list', this.options);
+			var noItems = $('<li id="no-items-found">No items found</li>');
+
+			userList.on('updated', function(list) {
+				if (list.matchingItems.length === 0) {
+					$(list.list).append(noItems);
+				} else {
+					noItems.detach();
+				}
+			});
+		}
+	};
+	searchFilter.init();
+
+	// People Content
+	$('.chat[data-chat=person2]').addClass('active-chat');
+	$('.person[data-chat=person2]').addClass('active');
+
+	$('.people-list .people .person').mousedown(function() {
+		if ($(this).hasClass('.active')) {
+			return false;
+		} else {
+			var findChat = $(this).attr('data-chat');
+			var personName = $(this).find('.name').text();
+			$('.chat-about .chat-with').html(personName);
+			$('.chat').removeClass('active-chat');
+			$('.people-list .people .person').removeClass('active');
+			$(this).addClass('active');
+			$('.chat[data-chat = ' + findChat + ']').addClass('active-chat');
+		}
+	});
+
+	// Send Input on Enter
+	$('#message-to-send').keydown(function(event) {
+		if (event.keyCode == 13) {
+			alert('enter key pressed');
+		}
+	});
 });
