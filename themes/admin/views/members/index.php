@@ -7,7 +7,7 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th><?php echo $clauses->get('name'); ?></th>
+					<th><?php echo $clauses->get('nickname'); ?></th>
 					<th><?php echo $clauses->get('friends'); ?></th>
 				</tr>
 			</thead>
@@ -16,8 +16,8 @@
 				foreach ($members as $memberLoop) {
 ?>
 					<tr>
-						<td><a href="<?php echo $linksDir . 'admin/members/' . $memberLoop['id']; ?>"><?php echo $memberLoop['name']; ?></a></td>
-						<td><?php echo $memberLoop['reg_date']; ?></td>
+						<td><a href="<?php echo $linksDir . 'admin/members/' . $memberLoop['id']; ?>"><?php echo $memberLoop['nickname']; ?></a></td>
+						<td><?php echo \Basics\Dates::sexyDate($memberLoop['reg_date']); ?></td>
 					</tr>
 <?php
 				}

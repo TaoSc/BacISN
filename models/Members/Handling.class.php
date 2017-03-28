@@ -3,7 +3,7 @@
 
 	class Handling {
 		public static function getMembers($condition = 'TRUE') {
-			return \Basics\Handling::getList($condition, 'members', 'Members', 'Single', false, false, true);
+			return \Basics\Handling::getList($condition, 'members', 'Members', 'Member', false, false, true);
 		}
 
 		public static function check($nickname, $slug, $firstName, $lastName, $email, $pwd, $nicknameTest = true, $birthDate = '0000-00-01', $namesTest = true) {
@@ -83,6 +83,7 @@
 
 		public static function registration($nickname, $email, $pwd1, $pwd2, $cookies = false, $admin = false) {
 			$nickname = htmlspecialchars($nickname);
+			$email = htmlspecialchars($email);
 			$slug = \Basics\Strings::slug($nickname);
 
 			if (self::check($nickname, $slug, null, null, $email, $pwd2, true, '0000-00-01', false) AND $pwd1 === $pwd2) {
@@ -90,7 +91,7 @@
 					INSERT INTO members(type_id, nickname, slug, email, password, registration)
 					VALUES(?, ?, ?, ?, ?, NOW())
 				');
-				$request->execute([($admin ? 1 : \Basics\Site::parameter('default_users_type')), $nickname, $slug, htmlspecialchars($email), hash('sha256', $pwd2)]);
+				$request->execute([($admin ? 1 : \Basics\Site::parameter('default_users_type')), $nickname, $slug, $email, hash('sha256', $pwd2)]);
 
 				if (self::login($nickname, hash('sha256', $pwd2), $cookies))
 					return true;

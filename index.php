@@ -100,7 +100,7 @@
 	$clauses = new Basics\Languages($language);
 	if ($currentMemberId) {
 		if (!Basics\site::session('member'))
-			Basics\site::session('member', (new Members\Single(Basics\site::session('member_id')))->getMember(false));
+			Basics\site::session('member', (new Members\Single(Basics\site::session('member_id')))->getMember());
 		$currentMember = Basics\site::session('member');
 		$rights = (new Members\Type($currentMember['type']['id']))->getRights();
 	}

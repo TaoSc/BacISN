@@ -26,7 +26,7 @@
 				$this->tag['slug'] = $clauses->getDB('tags', $this->tag['id'], 'slug');
 				$this->tag['name'] = $clauses->getDB('tags', $this->tag['id'], 'name');
 
-				$this->tag['author'] = (new \Members\Single($this->tag['author_id']))->getMember(false);
+				$this->tag['author'] = (new \Members\Single($this->tag['author_id']))->getMember();
 			}
 
 			return $this->tag;

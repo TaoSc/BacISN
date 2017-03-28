@@ -72,7 +72,7 @@
 				$this->post['img'] = (new \Medias\Image($this->post['img_id']))->getImage();
 				$this->post['authors'] = [];
 				foreach ($this->post['authors_ids'] as $memberLoop)
-					$this->post['authors'][] = (new \Members\Single($memberLoop))->getMember(false);
+					$this->post['authors'][] = (new \Members\Single($memberLoop))->getMember();
 				$this->post['comments_nbr'] = \Comments\Handling::countComments(0, $this->post['id'], 'posts', $this->languageCheck);
 
 				if ($this->post['raw_tags']) {

@@ -7,7 +7,6 @@
 
 	<title><?php echo $siteName; ?> | <?php echo $pageTitle; ?></title>
 
-	<!-- <link href="https://bootswatch.com/superhero/bootstrap.min.css" rel="stylesheet"> -->
 	<link href="<?php echo $subDir . $theme['dir']; ?>css/styles.css" rel="stylesheet">
 
 </head>

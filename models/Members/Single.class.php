@@ -16,7 +16,7 @@
 				$this->member['id'] = (int) $this->member['id'];
 		}
 
-		public function getMember($biography = true /* get rid of this /!\ */) {
+		public function getMember() {
 			if ($this->member) {
 				global $clauses;
 
@@ -43,14 +43,15 @@
 
 			return $this->member;
 		}
+/*
+		public function setMember($newNickname, $newFirstName, $newFamilyName, $newEmail, $newPwd, $newType, $newAvatar, $pwdCript = true) {
+			$nicknameTest = $newNickname !== $this->member['nickname'];
+			$pwdCript = $pwdCript ? hash('sha256', $newPwd) : $newPwd;
+			$namesTest = !empty($newFirstName) AND !empty($newFamilyName);
 
-		/*public function setMember($newPseudo, $newSubName, $newFamilyName, $newEmail, $newPwd, $newType, $newAvatar, $pwdCript = true) {
-			$pseudoTest = $newPseudo !== $this->member['pseudo'];
-			$pwdCript = $pwdCript ? sha1($newPwd) : $newPwd;
-			$namesTest = !empty($newSubName) AND !empty($newFamilyName);
-
-			if ($this->member AND \Members\Handling::check($newPseudo, $newSubName, $newFamilyName, $newEmail, $newPwd, $pseudoTest, '0000-00-01', $namesTest) AND !empty($newType)) {
+			if ($this->member AND \Members\Handling::check($newNickname, $newFirstName, $newFamilyName, $newEmail, $newPwd, $nicknameTest, '0000-00-01', $namesTest) AND !empty($newType)) {
 				global $siteDir;
+
 				if (empty($newAvatar)) {
 					if ($this->member['img_id'] === 'default')
 						$newAvatar = null;
@@ -67,11 +68,11 @@
 					}
 				}
 
-				$request = \Basics\Site::getDB()->prepare('UPDATE members SET pseudo = ?, img = ?, first_name = ?, family_name = ?, email = ?, password = ?, type_id = ? WHERE id = ?');
+				$request = \Basics\Site::getDB()->prepare('UPDATE members SET nickname = ?, img = ?, first_name = ?, last_name = ?, email = ?, password = ?, type_id = ? WHERE id = ?');
 				$request->execute([
-					htmlspecialchars($newPseudo),
+					htmlspecialchars($newNickname),
 					$newAvatar,
-					htmlspecialchars($newSubName),
+					htmlspecialchars($newFirstName),
 					htmlspecialchars($newFamilyName),
 					htmlspecialchars($newEmail),
 					$pwdCript,
@@ -83,9 +84,9 @@
 			}
 			else
 				return false;
-		}
+		}*/
 
-		public function deleteMember() {
+		/*public function deleteMember() {
 			if ($this->member) {
 				$db = \Basics\Site::getDB();
 
