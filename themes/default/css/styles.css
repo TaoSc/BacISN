@@ -25,6 +25,7 @@ a:active {
 
 .jumbotron {
 	padding: 1em;
+	overflow:hidden;
 }
 
 nav.navbar {
@@ -166,8 +167,9 @@ button {
 	display: none;
 	position: relative;
 	padding: 12.5px 12.5px;
-	margin-top: 15px;
-	color: #fff;
+	margin-top: -20px;
+    margin-left: -20px;
+	color: #080808;
 	z-index: 1000;
 	margin-right: 5px;
 	float: left;
@@ -176,7 +178,7 @@ button {
 	transition: 0.3s ease-in;
 }
 .chat-holder .chat-header i.fa-bars:hover {
-	background-color: white;
+	
 	color: #333333;
 }
 .chat-holder .chat-header i.fa-bars .fa-bars.visible {
@@ -184,11 +186,13 @@ button {
 }
 .chat-holder .chat-header img {
 	float: left;
+    margin-top: -19px;
 }
 .chat-holder .chat-header .chat-about {
 	float: left;
 	padding-left: 10px;
-	margin-top: 6px;
+	margin-top: -12px;
+    margin-left: 10px;
 }
 .chat-holder .chat-header .chat-with {
 	font-weight: bold;
@@ -229,7 +233,7 @@ button {
 	margin-bottom: 15px; /* seems unused */
 }
 .chat .chat-history .message-data-time {
-	color: rgba(255, 255, 255, 0.5);
+	color: rgba(0, 0, 0 , 0.54);
 	margin: 1em;
 }
 .chat .chat-history .message {
@@ -332,7 +336,7 @@ button {
 @media only screen and (max-width: 768px) {
 	.chat-holder .chat-header i.fa-bars {
 		display: block !important;
-		margin-top: 5px !important;
+		margin-top: -20px !important;
 	}
 	.people-list {
 		left: -220px;
@@ -363,7 +367,14 @@ button {
 	.chat-message button {
 		padding: 10px 6.5px;
 	}
+    .footer {
+        display: none;
+    }
 }
 @media only screen and (min-width: 768px) {
 	#chat-wrapper {}
+	.user-action-icons {
+		font-size: 2em;
+		color: #7C4DFF;
+	}
 }

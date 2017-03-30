@@ -18,6 +18,7 @@
 
 		public function getMember() {
 			if ($this->member) {
+				// password is salted (slug + pass)
 				global $clauses;
 
 				if ($this->member['first_name'])
@@ -43,7 +44,7 @@
 
 			return $this->member;
 		}
-/*
+
 		public function setMember($newNickname, $newFirstName, $newFamilyName, $newEmail, $newPwd, $newType, $newAvatar, $pwdCript = true) {
 			$nicknameTest = $newNickname !== $this->member['nickname'];
 			$pwdCript = $pwdCript ? hash('sha256', $newPwd) : $newPwd;
@@ -84,7 +85,7 @@
 			}
 			else
 				return false;
-		}*/
+		}
 
 		/*public function deleteMember() {
 			if ($this->member) {

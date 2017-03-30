@@ -48,3 +48,6 @@ comment_edit		= Comments edition
 comment_edit_descr	= Allows comments edition and deletion.
 comment_moderate	= Comments moderation
 comment_moderate_descr = Allows a deeper moderation of all comments.
+pwdu_placeholder    = Update your password
+last_name_placeholder  = Enter your last name
+first_name_placeholder = Enter your first name

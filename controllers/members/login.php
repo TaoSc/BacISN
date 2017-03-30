@@ -2,7 +2,7 @@
 	if ($currentMemberId)
 		error($clauses->get('already_logged_in'));
 	elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		if (Members\Handling::login($_POST['name'], hash('sha256', $_POST['pwd']), isset($_POST['cookies']))) {
+		if (Members\Handling::login($_POST['name'], hash('sha256', \Basics\Strings::slug($_POST['name']) . $_POST['pwd']), isset($_POST['cookies']))) {
 			if (isset($_POST['redirection']))
 				header('Location: ' . $linksDir . urldecode(str_replace(['=dot', '='], ['.', '%'], $_POST['redirection'])));
 			elseif (isset($params[2]))

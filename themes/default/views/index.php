@@ -4,14 +4,14 @@
 		if ($currentMemberId) {
 ?>
 			<div class="pull-left">
-				<a href="<?php echo $linksDir . 'admin/members/' . $currentMember['id']; ?>" title="<?php echo $clauses->get('modify_profile'); ?>" class="btn btn-link btn-lg"><span class="glyphicon glyphicon-pencil"></span></a>
+				<a href="<?php echo $linksDir . 'admin/members/' . $currentMember['id']; ?>" title="<?php echo $clauses->get('modify_profile'); ?>" class="btn btn-link btn-lg"><span class="user-action-icon glyphicon glyphicon-pencil"></span></a>
 			</div>
 			<div class="pull-right">
-				<a href="<?php echo $linksDir . 'members/' . $currentMember['slug']; ?>/" title="<?php echo $clauses->get('profile'); ?>" class="btn btn-link btn-lg"><span class="glyphicon glyphicon-user"></span></a>
+				<a href="<?php echo $linksDir . 'members/' . $currentMember['slug']; ?>/" title="<?php echo $clauses->get('profile'); ?>" class="btn btn-link btn-lg"><span class="user-action-icon glyphicon glyphicon-user"></span></a>
 			</div>
 
+			<img src="<?php echo Basics\Templates::getImg('avatars/' . $currentMember['avatar_slug'], $currentMember['avatar'], 100, 100); ?>" class="img-circle pull-left" alt="<?php echo $clauses->get('avatar'); ?>">
 			<h1><?php echo $currentMember['nickname']; ?></h1>
-			<?php echo stripslashes(eval('return "' . addslashes($clauses->getDB('pages', 1, 'index_text')) . '";')); ?>
 <?php
 		}
 		else {
@@ -154,48 +154,43 @@
 					<!-- end chat-header -->
 
 					<ul>
+                        <div class="message-status align-right">
+									<span class="message-data-time">10:10 AM, Today</span>
+								</div>
 						<li class="clearfix">
 							<div class="message other-message pull-right">
 								Hi Vincent, how are you? How is the project coming along?
 
-								<div class="message-status align-right">
-									<span class="message-data-time">10:10 AM, Today</span>
-									<span class="message-data-name">Olia</span>
-								</div>
+								
 							</div>
 						</li>
 
 						<li>
+                            <div class="message-status">
+									<span class="message-data-time">10:12 AM, Today</span>
+								</div>
 							<div class="message my-message">
 								Are we meeting today? Project has been already finished and I have results to show you.
 
-								<div class="message-status">
-									<span class="message-data-name">Vincent</span>
-									<span class="message-data-time">10:12 AM, Today</span>
-								</div>
 							</div>
 						</li>
-
+                                <div class="message-status align-right">
+									<span class="message-data-time">10:14 AM, Today</span>
+								</div>
 						<li class="clearfix">
 							<div class="message other-message pull-right">
 								Well I am not sure. The rest of the team is not here yet. Maybe in an hour or so? Have you faced any problems at the last phase of the project?
-
-								<div class="message-status align-right">
-									<span class="message-data-time">10:14 AM, Today</span>
-									<span class="message-data-name">Olia</span>
-								</div>
 							</div>
 						</li>
 
 						<li>
+                            <div class="message-status">
+									<span class="message-data-time">10:20 AM, Today</span>
+								</div>
 							<div class="message my-message">
 								Actually everything was fine. I'm very excited to show this to our team.
 
-								<div class="message-status">
-									<span class="message-data-name">Vincent</span>
-									<span class="message-data-time">10:20 AM, Today</span>
 								</div>
-							</div>
 
 						</li>
 					</ul>
@@ -204,231 +199,24 @@
 				<!-- end chat-history -->
 
 				<div class="chat-message clearfix">
-					<!--<textarea name="message-to-send" id="message-to-send" placeholder="Type your message" rows="3"></textarea>
-					<button>Send</button>-->
+					
 					<input name="message-to-send" id="message-to-send" placeholder="Type your message" type="text" class="float-left">
-					<button class="pull-right">Send</button>
+					<button class="pull-right button-send">Send</button>
 				</div>
 				<!-- end chat-message -->
 			</div>
 
-			<div class="chat" data-chat="person2">
-				<div class="chat-history">
-					<div class="chat-header clearfix">
-						<i class="fa fa-bars"></i>
-						<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_02.jpg" alt="avatar">
+			
+					
 
-						<div class="chat-about">
-							<div class="chat-with">Aiden Chavez</div>
-						</div>
-					</div>
-					<!-- end chat-header -->
+					
 
-					<ul>
-						<li class="clearfix">
-							<div class="message other-message pull-right">
-								Hi Vincent, how are you? How is the project coming along?
-
-								<div class="message-status align-right">
-									<span class="message-data-time">10:10 AM, Today</span>
-									<span class="message-data-name">Olia</span>
-								</div>
-							</div>
-						</li>
-
-						<li>
-							<div class="message my-message">
-								Are we meeting today? Project has been already finished and I have results to show you.
-
-								<div class="message-status">
-									<span class="message-data-name">Vincent</span>
-									<span class="message-data-time">10:12 AM, Today</span>
-								</div>
-							</div>
-						</li>
-
-						<li class="clearfix">
-							<div class="message other-message pull-right">
-								Well I am not sure. The rest of the team is not here yet. Maybe in an hour or so? Have you faced any problems at the last phase of the project?
-
-								<div class="message-status align-right">
-									<span class="message-data-time">10:14 AM, Today</span>
-									<span class="message-data-name">Olia</span>
-								</div>
-							</div>
-						</li>
-
-						<li>
-							<div class="message my-message">
-								Actually everything was fine. I'm very excited to show this to our team.
-
-								<div class="message-status">
-									<span class="message-data-name">Vincent</span>
-									<span class="message-data-time">10:20 AM, Today</span>
-								</div>
-							</div>
-
-						</li>
-					</ul>
-
-				</div>
-				<!-- end chat-history -->
-
-				<div class="chat-message clearfix">
-					<!--<textarea name="message-to-send" id="message-to-send" placeholder="Type your message" rows="3"></textarea>
-					<button>Send</button>-->
-					<input name="message-to-send" id="message-to-send" placeholder="Type your message" type="text" class="float-left">
-					<button class="pull-right">Send</button>
-				</div>
-				<!-- end chat-message -->
-			</div>
-
-			<div class="chat" data-chat="person3">
-				<div class="chat-history">
-					<div class="chat-header clearfix">
-						<i class="fa fa-bars"></i>
-						<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_03.jpg" alt="avatar">
-
-						<div class="chat-about">
-							<div class="chat-with">Mike Thomas</div>
-						</div>
-					</div>
-					<!-- end chat-header -->
-
-					<ul>
-						<li class="clearfix">
-							<div class="message other-message pull-right">
-								Hi Vincent, how are you? How is the project coming along?
-
-								<div class="message-status align-right">
-									<span class="message-data-time">10:10 AM, Today</span>
-									<span class="message-data-name">Olia</span>
-								</div>
-							</div>
-						</li>
-
-						<li>
-							<div class="message my-message">
-								Are we meeting today? Project has been already finished and I have results to show you.
-
-								<div class="message-status">
-									<span class="message-data-name">Vincent</span>
-									<span class="message-data-time">10:12 AM, Today</span>
-								</div>
-							</div>
-						</li>
-
-						<li class="clearfix">
-							<div class="message other-message pull-right">
-								Well I am not sure. The rest of the team is not here yet. Maybe in an hour or so? Have you faced any problems at the last phase of the project?
-
-								<div class="message-status align-right">
-									<span class="message-data-time">10:14 AM, Today</span>
-									<span class="message-data-name">Olia</span>
-								</div>
-							</div>
-						</li>
-
-						<li>
-							<div class="message my-message">
-								Actually everything was fine. I'm very excited to show this to our team.
-
-								<div class="message-status">
-									<span class="message-data-name">Vincent</span>
-									<span class="message-data-time">10:20 AM, Today</span>
-								</div>
-							</div>
-
-						</li>
-					</ul>
-
-				</div>
-				<!-- end chat-history -->
-
-				<div class="chat-message clearfix">
-					<!--<textarea name="message-to-send" id="message-to-send" placeholder="Type your message" rows="3"></textarea>
-					<button>Send</button>-->
-					<input name="message-to-send" id="message-to-send" placeholder="Type your message" type="text" class="float-left">
-					<button class="pull-right">Send</button>
-				</div>
-				<!-- end chat-message -->
-			</div>
-
-			<div class="chat" data-chat="person4">
-				<div class="chat-history">
-					<div class="chat-header clearfix">
-						<i class="fa fa-bars"></i>
-						<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_04.jpg" alt="avatar">
-
-						<div class="chat-about">
-							<div class="chat-with">Erica Hughes</div>
-						</div>
-					</div>
-					<!-- end chat-header -->
-
-					<ul>
-						<li class="clearfix">
-							<div class="message other-message pull-right">
-								Hi Vincent, how are you? How is the project coming along?
-
-								<div class="message-status align-right">
-									<span class="message-data-time">10:10 AM, Today</span>
-									<span class="message-data-name">Olia</span>
-								</div>
-							</div>
-						</li>
-
-						<li>
-							<div class="message my-message">
-								Are we meeting today? Project has been already finished and I have results to show you.
-
-								<div class="message-status">
-									<span class="message-data-name">Vincent</span>
-									<span class="message-data-time">10:12 AM, Today</span>
-								</div>
-							</div>
-						</li>
-
-						<li class="clearfix">
-							<div class="message other-message pull-right">
-								Well I am not sure. The rest of the team is not here yet. Maybe in an hour or so? Have you faced any problems at the last phase of the project?
-
-								<div class="message-status align-right">
-									<span class="message-data-time">10:14 AM, Today</span>
-									<span class="message-data-name">Olia</span>
-								</div>
-							</div>
-						</li>
-
-						<li>
-							<div class="message my-message">
-								Actually everything was fine. I'm very excited to show this to our team.
-
-								<div class="message-status">
-									<span class="message-data-name">Vincent</span>
-									<span class="message-data-time">10:20 AM, Today</span>
-								</div>
-							</div>
-
-						</li>
-					</ul>
-
-				</div>
-				<!-- end chat-history -->
-
-				<div class="chat-message clearfix">
-					<!--<textarea name="message-to-send" id="message-to-send" placeholder="Type your message" rows="3"></textarea>
-					<button>Send</button>-->
-					<input name="message-to-send" id="message-to-send" placeholder="Type your message" type="text" class="float-left">
-					<button class="pull-right">Send</button>
-				</div>
-				<!-- end chat-message -->
-			</div>
+				
 
 		</div>
-		<!-- end chat -->
+		
 
 	</div>
-	<!-- end container -->
+
 <?php
 	}

@@ -91,9 +91,9 @@
 					INSERT INTO members(type_id, nickname, slug, email, password, registration)
 					VALUES(?, ?, ?, ?, ?, NOW())
 				');
-				$request->execute([($admin ? 1 : \Basics\Site::parameter('default_users_type')), $nickname, $slug, $email, hash('sha256', $pwd2)]);
+				$request->execute([($admin ? 1 : \Basics\Site::parameter('default_users_type')), $nickname, $slug, $email, hash('sha256', $slug . $pwd2)]);
 
-				if (self::login($nickname, hash('sha256', $pwd2), $cookies))
+				if (self::login($nickname, hash('sha256', $slug . $pwd2), $cookies))
 					return true;
 				elseif (!$admin) {
 					global $clauses;

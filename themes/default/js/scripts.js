@@ -123,4 +123,17 @@ $(function() {
 			alert('enter key pressed');
 		}
 	});
+
+	/*$('.button-send').click(
+		function() {
+			
+		}
+
+	);*/
+
+	$('#message').on('click', '.button-send', function() {
+		alert('button pressed');
+		$('.chat-history ul').append($('.message-to-send').text());
+		
+	});
 });

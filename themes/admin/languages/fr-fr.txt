@@ -48,3 +48,6 @@ comment_edit		= Modification de commentaires
 comment_edit_descr	= Autorise la modification et la suppression de commentaires.
 comment_moderate	= Modération de commentaires
 comment_moderate_descr = Autorise une modification poussée de tous les commentaires.
+pwdu_placeholder    = Changer votre mot de passe 
+last_name_placeholder  = Entrez votre nom de famille
+first_name_placeholder = Entrez votre prénom
