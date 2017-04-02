@@ -131,7 +131,7 @@ $(function() {
 
 	);*/
 
-	$('#message').on('click', '.button-send', function() {
+	$('.chat-message').on('click', '.button-send', function() {
 		alert('button pressed');
 		$('.chat-history ul').append($('.message-to-send').text());
 		

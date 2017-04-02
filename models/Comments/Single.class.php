@@ -34,7 +34,7 @@
 				if ($lineJump)
 					$this->comment['content'] = \Basics\Strings::bbCode(nl2br($this->comment['content'], false));
 
-				$this->comment['author'] = (new \Members\Single($this->comment['author_id']))->getMember(false);
+				$this->comment['author'] = (new \Members\Single($this->comment['author_id']))->getMember();
 				$this->comment['language'] = (new \Basics\Languages($this->comment['language'], false))->getLanguage($language);
 				$this->comment['likes'] = \Votes\Handling::number($this->comment['id'], 'comments');
 				$this->comment['dislikes'] = \Votes\Handling::number($this->comment['id'], 'comments', -1);
