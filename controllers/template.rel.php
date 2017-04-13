@@ -30,6 +30,8 @@
 				['caption' => $clauses->get('log_in'),		'link' => 'members/login/' . str_replace('%', '=', urlencode($location)),	'icon' => ''],
 				['caption' => $clauses->get('register'),	'link' => 'members/registration',											'icon' => '']
 			]);
+			
+			$navigationRight = [];
 		}
 	}
 

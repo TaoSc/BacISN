@@ -7,12 +7,12 @@
 		}
 
 		public static function check($nickname, $slug, $firstName, $lastName, $email, $pwd, $nicknameTest = true, $birthDate = '0000-00-01', $namesTest = true) {
-			if (!empty($birthDate) AND $birthDate !== '0000-00-00' AND !empty($nickname) AND !empty($email) AND mb_strlen($pwd) >= 6)) {
+			if (!empty($birthDate) AND $birthDate !== '0000-00-00' AND !empty($nickname) AND !empty($email) AND mb_strlen($pwd) >= 6) {
 				$birthDateRegex = preg_match('#^([0-9]{4})-([0-9]{2})-([0-9]{2})$#', $birthDate);
 				$emailRegex = preg_match('#^[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+\.[a-zA-Z]{2,4}$#', $email);
 				$namesTestCond = $namesTest ? mb_strlen($lastName) >= 2 AND mb_strlen($firstName) >= 2 : true;
 
-				if ($namesTestCond AND $birthDateRegex AND mb_strlen($nickname) >= 4 AND $emailRegex) {
+				if ($namesTestCond AND $birthDateRegex AND mb_strlen($nickname) >= 3 AND $emailRegex) {
 					if ($nicknameTest) {
 						$db = \Basics\Site::getDB();
 
@@ -29,7 +29,7 @@
 					else
 						$otherMbrsIds = null;
 
-					if (empty($otherMbrsIds) AND mb_substr_count($nickname, '@') === 0)
+					if (empty($otherMbrsIds) AND mb_substr_count($nickname, '@') === 0 AND $slug !== 'default')
 						return true;
 					else
 						return false;

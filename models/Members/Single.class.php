@@ -12,8 +12,14 @@
 			');
 			$request->execute([$id]);
 			$this->member = $request->fetch(\PDO::FETCH_ASSOC);
-			if ($this->member)
+
+			if ($this->member) {
+				global $currentMemberId, $rights;
+
 				$this->member['id'] = (int) $this->member['id'];
+				$this->member['edit_cond'] = ($currentMemberId AND (($currentMemberId === $this->member['id'] AND $this->member['type_id'] != 3) OR ($rights['admin_access'] AND $rights['config_edit'])));
+				$this->member['removal_cond'] = $this->member['edit_cond'] AND $this->member['type_id'] != 3;
+			}
 		}
 
 		public function getMember() {
@@ -45,21 +51,28 @@
 			return $this->member;
 		}
 
-		public function setMember($newNickname, $newFirstName, $newFamilyName, $newEmail, $newPwd, $newType, $newAvatar, $pwdCript = true) {
-			$nicknameTest = $newNickname !== $this->member['nickname'];
-			$pwdCript = $pwdCript ? hash('sha256', $newPwd) : $newPwd;
-			$namesTest = !empty($newFirstName) AND !empty($newFamilyName);
+		public function setMember($newNickname, $newFirstName, $newLastName, $newEmail, $newBirthDate, $newPwd, $newType, $newAvatar) {
+			$newNickname = htmlspecialchars($newNickname);
+			$newSlug = \Basics\Strings::slug($newNickname);
+			$newFirstName = htmlspecialchars($newFirstName);
+			$newLastName = htmlspecialchars($newLastName);
+			$newEmail = htmlspecialchars($newEmail);
 
-			if ($this->member AND \Members\Handling::check($newNickname, $newFirstName, $newFamilyName, $newEmail, $newPwd, $nicknameTest, '0000-00-01', $namesTest) AND !empty($newType)) {
+			$pwdBypass = empty($newPwd) ? true : false;
+			$nicknameTest = $newNickname !== $this->member['nickname'];
+			$namesTest = (!empty($newFirstName) OR !empty($newLastName));
+
+			if ($this->member AND \Members\Handling::check($newNickname, $newSlug, $newFirstName, $newLastName, $newEmail, $pwdBypass ? '123456' : $newPwd, $nicknameTest, (empty($newBirthDate)) ? '0000-00-01' : $newBirthDate, $namesTest) AND !empty($newType)) {
 				global $siteDir;
 
+				// we need to clear the password cache in session in case it has changed!
+
 				if (empty($newAvatar)) {
-					if ($this->member['img_id'] === 'default')
-						$newAvatar = null;
-					else
-						$newAvatar = $this->member['img'];
+					// $newAvatar = $this->member['avatar'];
+					$newAvatar = null;
 				}
 				else {
+					die('not ready yet.');
 					$newAvatar = \Basics\Images::crop($newAvatar, 'avatars/' . $this->member['id'], [[100, 100]]);
 					if (!$newAvatar)
 						die('Une erreur est survenue lors de l\'envoi de votre avatar.');
@@ -69,15 +82,17 @@
 					}
 				}
 
-				$request = \Basics\Site::getDB()->prepare('UPDATE members SET nickname = ?, img = ?, first_name = ?, last_name = ?, email = ?, password = ?, type_id = ? WHERE id = ?');
+				$request = \Basics\Site::getDB()->prepare('UPDATE members SET nickname = ?, slug = ?, avatar = ?, first_name = ?, last_name = ?, email = ?, birth = ?, password = ?, type_id = ? WHERE id = ?');
 				$request->execute([
-					htmlspecialchars($newNickname),
+					$newNickname,
+					$newSlug,
 					$newAvatar,
-					htmlspecialchars($newFirstName),
-					htmlspecialchars($newFamilyName),
-					htmlspecialchars($newEmail),
-					$pwdCript,
-					htmlspecialchars($newType),
+					$newFirstName,
+					$newLastName,
+					$newEmail,
+					$newBirthDate,
+					$pwdBypass ? $this->member['password'] : hash('sha256', $newSlug . $newPwd),
+					(int) $newType,
 					$this->member['id']
 				]);
 

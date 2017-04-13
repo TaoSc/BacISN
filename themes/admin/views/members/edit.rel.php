@@ -26,7 +26,7 @@
 		<div class="form-group">
 			<label class="col-md-4 col-xs-3 control-label" for="birth"><?php echo $clauses->get('birth'); ?></label>
 			<div class="col-md-4 col-xs-9">
-				<input name="birth" id="birth" type="date" class="form-control" value="<?php echo $member['birth']; ?>">
+				<input name="birth" id="birth" type="date" class="form-control" value="<?php echo $member['birth']; ?>" placeholder="YYYY-MM-DD">
 			</div>
 		</div>
 

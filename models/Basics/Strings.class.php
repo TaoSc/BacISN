@@ -93,6 +93,7 @@
 		}
 
 		public static function bbCode($text) {
-			return (new \JBBCode\Parser())->addCodeDefinitionSet(new \JBBCode\DefaultCodeDefinitionSet())->parse($text)->getAsHtml();
+			// return (new \JBBCode\Parser())->addCodeDefinitionSet(new \JBBCode\DefaultCodeDefinitionSet())->parse($text)->getAsHtml();
+			return $text;
 		}
 	}

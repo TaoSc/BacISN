@@ -179,7 +179,6 @@ button {
 	transition: 0.3s ease-in;
 }
 .chat-holder .chat-header i.fa-bars:hover {
-	
 	color: #333333;
 }
 .chat-holder .chat-header i.fa-bars .fa-bars.visible {
