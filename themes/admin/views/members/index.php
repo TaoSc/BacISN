@@ -8,7 +8,7 @@
 			<thead>
 				<tr>
 					<th><?php echo $clauses->get('nickname'); ?></th>
-					<th><?php echo $clauses->get('friends'); ?></th>
+					<th><?php echo $clauses->get('reg_date'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -17,7 +17,7 @@
 ?>
 					<tr>
 						<td><a href="<?php echo $linksDir . 'admin/members/' . $memberLoop['id']; ?>"><?php echo $memberLoop['nickname']; ?></a></td>
-						<td><?php echo \Basics\Dates::sexyDate($memberLoop['reg_date']); ?></td>
+						<td><?php echo \Basics\Dates::sexyDate($memberLoop['registration']['date']); ?></td>
 					</tr>
 <?php
 				}

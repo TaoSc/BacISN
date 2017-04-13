@@ -94,6 +94,7 @@ button {
 #chat-wrapper ul {
 	list-style-type: none;
 	padding-top: 1em;
+	margin: 0;
 }
 
 
@@ -186,7 +187,7 @@ button {
 }
 .chat-holder .chat-header img {
 	float: left;
-	margin-top: -19px;
+	margin-top: -1em;
 }
 .chat-holder .chat-header .chat-about {
 	float: left;
@@ -222,12 +223,13 @@ button {
 }
 .chat .chat-history {
 	padding: 1em;
+	padding-bottom: 0;
 	border-bottom: 2px solid white;
 }
 .chat .chat-history ul {
 	padding: 0;
 	overflow-y: scroll;
-	height: 29em;
+	height: 32em;
 }
 .chat .chat-history .message-data {
 	margin-bottom: 15px; /* seems unused */

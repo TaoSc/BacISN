@@ -100,8 +100,8 @@ $(function() {
 	searchFilter.init();
 
 	// People Content
-	$('.chat[data-chat=person2]').addClass('active-chat');
-	$('.person[data-chat=person2]').addClass('active');
+	$('.chat[data-chat=person1]').addClass('active-chat');
+	$('.person[data-chat=person1]').addClass('active');
 
 	$('.people-list .people .person').mousedown(function() {
 		if ($(this).hasClass('.active')) {
@@ -118,22 +118,23 @@ $(function() {
 	});
 
 	// Send Input on Enter
+	function sendMessage(id) {
+		var value = $('#message-to-send').val(),
+			postDate = 'Now',
+			messageBlock = '<li class="clearfix"><div class="message-status align-right"><span class="message-data-time">' + postDate + '</span></div><div class="message other-message pull-right">' + value + '</div></li>';
+
+		$('.chat-history ul').append(messageBlock);
+		$('#message-to-send').val('');
+	}
+
 	$('#message-to-send').keydown(function(event) {
 		if (event.keyCode == 13) {
-			alert('enter key pressed');
+			sendMessage(1);
 		}
 	});
-
-	/*$('.button-send').click(
-		function() {
-			
-		}
-
-	);*/
-
 	$('.chat-message').on('click', '.button-send', function() {
-		alert('button pressed');
-		$('.chat-history ul').append($('.message-to-send').text());
-		
+		sendMessage(1);
 	});
+
+	// $('.button-send').click(function() {});
 });

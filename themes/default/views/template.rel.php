@@ -13,7 +13,7 @@
 
 <body>
 
-	<nav role="navigation" class="navbar navbar-fixed-top">
+	<nav class="navbar navbar-fixed-top">
 		<div class="container">
 
 			<div class="navbar-header">

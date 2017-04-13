@@ -2,7 +2,9 @@
 	$memberObj = (new Members\Single($params[2]));
 	$member = $memberObj->getMember();
 
-	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	if (!$member['edit_cond'])
+		error();
+	elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		if ($memberObj->setMember($_POST['nickname'], $_POST['first_name'], $_POST['last_name'], $member['email'], $_POST['password'], $member['type_id'], $_POST['img']))
 			header('Refresh: 0');
 		else

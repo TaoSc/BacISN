@@ -1,6 +1,5 @@
 <?php
-	// Data gathered:
-	/*
+	/* Data gathered:
 		[1] => Array
         (
             [id] => 1
@@ -22,7 +21,6 @@
                     [date] => 2017-03-07
                     [time] => 11:46 AM
                 )
-
             [type] => Array
                 (
                     [slug] => administrators
@@ -30,12 +28,9 @@
                     [id] => 1
                     [count] => 1
                 )
-
         )
 	*/
 	$members = \Members\Handling::getMembers();
-
-	$btnsGroupMenu = [['link' => $linksDir . 'admin/members/0', 'name' => $clauses->get('arzar')]];
 
 	$pageTitle = $clauses->get('members');
 	$viewPath = 'members/index';
