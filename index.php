@@ -150,8 +150,10 @@
 		include $siteDir . 'controllers/members/login.ajax.php';
 	elseif ($params[0] === 'members' AND isset($params[2]) AND ($params[1] === 'login' OR $params[1] === 'logout') AND $foldersDepth === 2)
 		include $siteDir . 'controllers/members/' . $params[1] . '.php';
-	elseif ($params[0] === 'members' AND isset($params[1]) AND $foldersDepth === 2)
+	elseif ($params[0] === 'members' AND isset($params[1]) AND $params[2] === 'index' AND $foldersDepth === 2)
 		include $siteDir . 'controllers/members/profile.rel.php';
+	elseif ($params[0] === 'members' AND isset($params[1]) AND isset($params[2]) AND $foldersDepth === 2)
+		include $siteDir . 'controllers/members/friendship.php';
 
 	elseif ($params[0] === 'votes' AND isset($params[2]) AND $foldersDepth === 2)
 		include $siteDir . 'controllers/votes/ajax.rel.php';

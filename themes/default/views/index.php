@@ -37,105 +37,22 @@
 			</div>
 
 			<ul class="list people">
-				<li class="clearfix person" data-chat="person1">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Vincent Porter</span>
-						<div class="status">
-							<i class="fa fa-circle online"></i> online
+<?php
+				foreach ($friends as $member) {
+?>
+					<li class="clearfix person" data-chat="person<?php echo $i; ?>">
+						<img class="img-circle" src="<?php echo Basics\Templates::getImg('avatars/' . $member['avatar_slug'], $member['avatar'], 100, 100); ?>" alt="<?php echo $clauses->get('avatar'); ?>">
+						<div class="about">
+							<span class="name"><?php echo $member['nickname']; ?></span>
+							<div class="status">
+								<i class="fa fa-circle online"></i> online
+							</div>
 						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person2">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_02.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Aiden Chavez</span>
-						<div class="status">
-							<i class="fa fa-circle offline"></i> left 7 mins ago
-						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person3">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_03.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Mike Thomas</span>
-						<div class="status">
-							<i class="fa fa-circle online"></i> online
-						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person4">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_04.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Erica Hughes</span>
-						<div class="status">
-							<i class="fa fa-circle online"></i> online
-						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person5">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_05.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Ginger Johnston</span>
-						<div class="status">
-							<i class="fa fa-circle online"></i> online
-						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person6">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_06.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Tracy Carpenter</span>
-						<div class="status">
-							<i class="fa fa-circle offline"></i> left 30 mins ago
-						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person7">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_07.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Christian Kelly</span>
-						<div class="status">
-							<i class="fa fa-circle offline"></i> left 10 hours ago
-						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person8">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_08.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Monica Ward</span>
-						<div class="status">
-							<i class="fa fa-circle online"></i> online
-						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person9">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_09.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Dean Henry</span>
-						<div class="status">
-							<i class="fa fa-circle offline"></i> offline since Oct 28
-						</div>
-					</div>
-				</li>
-
-				<li class="clearfix person" data-chat="person10">
-					<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_10.jpg" alt="avatar">
-					<div class="about">
-						<span class="name">Peyton Mckinney</span>
-						<div class="status">
-							<i class="fa fa-circle online"></i> online
-						</div>
-					</div>
-				</li>
+					</li>
+<?php
+					$i++;
+				}
+?>
 			</ul>
 		</div>
 
@@ -194,11 +111,12 @@
 
 				<div class="chat-message clearfix">
 					<input name="message-to-send" id="message-to-send" placeholder="Type your message" type="text" class="float-left">
-					<button class="pull-right button-send">Send</button>
+					<button class="pull-right button-send"><?php echo $clauses->get('send'); ?></button>
 				</div>
 				<!-- end chat-message -->
 			</div>
 		</div>
 	</div>
 <?php
+	Comments\Handling::view($currentMemberId, 'posts');
 	}

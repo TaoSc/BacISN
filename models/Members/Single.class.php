@@ -62,7 +62,7 @@
 			$nicknameTest = $newNickname !== $this->member['nickname'];
 			$namesTest = (!empty($newFirstName) OR !empty($newLastName));
 
-			if ($this->member AND \Members\Handling::check($newNickname, $newSlug, $newFirstName, $newLastName, $newEmail, $pwdBypass ? '123456' : $newPwd, $nicknameTest, (empty($newBirthDate)) ? '0000-00-01' : $newBirthDate, $namesTest) AND !empty($newType)) {
+			if ($this->member AND Handling::check($newNickname, $newSlug, $newFirstName, $newLastName, $newEmail, $pwdBypass ? '123456' : $newPwd, $nicknameTest, (empty($newBirthDate)) ? '0000-00-01' : $newBirthDate, $namesTest) AND !empty($newType)) {
 				global $siteDir;
 
 				// we need to clear the password cache in session in case it has changed!
@@ -100,6 +100,93 @@
 			}
 			else
 				return false;
+		}
+
+		public function getFriendRequests() {
+			return \Basics\Handling::getList('to_u = ' . $this->member['id'], 'friend_requests', 'Members', 'Member', false, false, true);
+		}
+
+		public function getFriends() {
+			$friendsList = [];
+
+
+			$request = \Basics\Site::getDB()->query('SELECT applicant id FROM friends WHERE acceptor = ' . $this->member['id'] . ' ORDER BY id ASC');
+			$ids = $request->fetchAll(\PDO::FETCH_ASSOC);
+
+			foreach ($ids as $member)
+				$friendsList[] = (new Single($member['id']))->getMember();
+
+
+			$request = \Basics\Site::getDB()->query('SELECT acceptor id FROM friends WHERE applicant = ' . $this->member['id'] . ' ORDER BY id ASC');
+			$ids = $request->fetchAll(\PDO::FETCH_ASSOC);
+
+			foreach ($ids as $member)
+				$friendsList[] = (new Single($member['id']))->getMember();
+
+			return array_values(array_filter($friendsList));
+		}
+
+		public function befriend($requestedId) {
+			if ($requestedId == $this->member['id'])
+				return true;
+			return \Basics\Handling::countEntries('friends', '(applicant = ' . $this->member['id'] . ' AND acceptor = ' . $requestedId . ') OR (applicant = ' . $requestedId . ' AND acceptor = ' . $this->member['id'] . ')');
+		}
+
+		public function requestPending($requestedId, $bothWays = false) {
+			if ($requestedId == $this->member['id'])
+				return false;
+
+			if ($bothWays)
+				$condition = '(from_u = ' . $this->member['id'] . ' AND to_u = ' . $requestedId . ') OR (from_u = ' . $requestedId . ' AND to_u = ' . $this->member['id'] . ')';
+			else
+				$condition = '(from_u = ' . $this->member['id'] . ' AND to_u = ' . $requestedId . ')';
+
+			return \Basics\Handling::countEntries('friend_requests', $condition);
+		}
+
+		public function sendFriendRequest($requestedId) {
+			$requestedMember = (new Single($requestedId))->getMember();
+
+			if ($this->member['type_id'] != 3 AND $requestedMember['type_id'] != 3 AND !$this->befriend($requestedId) AND !$this->requestPending($requestedId, true)) {
+				$request = \Basics\Site::getDB()->prepare('INSERT INTO friend_requests (from_u, to_u) VALUES (?, ?)');
+				$request->execute([$this->member['id'], $requestedId]);
+
+				return true;
+			}
+			else
+				return false;
+		}
+
+		public function acceptFriendRequest($senderId) {
+			$requestedMemberObj = new Single($senderId);
+			$requestedMember = $requestedMemberObj->getMember();
+
+			if ($this->member['type_id'] != 3 AND $requestedMember['type_id'] != 3 AND !$this->befriend($senderId) AND $requestedMemberObj->requestPending($this->member['id'])) {
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE from_u = ? AND to_u = ?');
+				$request->execute([$senderId, $this->member['id']]);
+
+				$request = \Basics\Site::getDB()->prepare('INSERT INTO friends (applicant, acceptor) VALUES (?, ?)');
+				$request->execute([$senderId, $this->member['id']]);
+
+				return true;
+			}
+			else
+				return false;
+		}
+
+		public function cancelFriendRequest($requestedId) {
+			$requestedMember = (new Single($requestedId))->getMember();
+
+			if ($this->befriend($requestedId)) {
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM friends WHERE (applicant = ? AND acceptor = ?) OR (applicant = ? AND acceptor = ?)');
+				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
+			}
+			elseif ($this->requestPending($requestedId, true)) {
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE (from_u = ? AND to_u = ?) OR (from_u = ? AND to_u = ?)');
+				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
+			}
+
+			return true;
 		}
 
 		/*public function deleteMember() {

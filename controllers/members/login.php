@@ -4,11 +4,16 @@
 	elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		if (Members\Handling::login($_POST['name'], hash('sha256', \Basics\Strings::slug($_POST['name']) . $_POST['pwd']), isset($_POST['cookies']))) {
 			if (isset($_POST['redirection']))
-				header('Location: ' . $linksDir . urldecode(str_replace(['=dot', '='], ['.', '%'], $_POST['redirection'])));
+				$redirection = $_POST['redirection'];
 			elseif (isset($params[2]))
-				header('Location: ' . $linksDir . urldecode(str_replace(['=dot', '='], ['.', '%'], $params[2])));
+				$redirection = $params[2];
 			else
-				header('Location: ' . $linksDir);
+				$redirection = null;
+
+			if ($redirection == 'members=2Fregistration')
+				$redirection = null;
+
+			header('Location: ' . $linksDir . urldecode(str_replace(['=dot', '='], ['.', '%'], $redirection)));
 		}
 		else
 			error(stripslashes(eval($clauses->getMagic('login_bad_pass'))), false);

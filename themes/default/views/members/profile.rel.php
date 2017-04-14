@@ -40,5 +40,22 @@
 			<dt><?php echo $clauses->get('type'); ?></dt>
 			<dd><a href="<?php echo $linksDir . 'members/types/' . $member['type']['slug']; ?>"><?php echo $member['type']['name']; ?></a></dd>
 		</dl>
+
+<?php
+		if ($currentMemberId == $member['id'])
+			echo $clauses->get('your_profile');
+		elseif (!$isFriend AND !$requestPending)
+			echo '<a class="btn btn-primary btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/request" role="button">' . $clauses->get('request_friendship') . '</a>';
+		elseif (!$isFriend AND $requestPendingFromYou) {
+			echo 'waiting for their reply...';
+			echo '<a class="btn btn-info btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/cancel" role="button">' . $clauses->get('cancel') . '</a>';
+		}
+		elseif (!$isFriend AND $requestPendingFromThem) {
+			echo '<a class="btn btn-success btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/accept" role="button">' . $clauses->get('accept') . '</a>';
+			echo '<a class="btn btn-danger btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/decline" role="button">' . $clauses->get('decline') . '</a>';
+		}
+		else
+			echo $clauses->get('friends');
+?>
 	</div>
 </div>

@@ -58,6 +58,9 @@
 ?>
 				</ul>
 
+<?php
+				if ($currentMemberId) {
+?>
 				<form class="navbar-form navbar-right">
 					<div class="form-group">
 						<div class="input-group">
@@ -68,6 +71,9 @@
 						</div>
 					</div>
 				</form>
+<?php
+				}
+?>
 			</div>
 			<!--/.nav-collapse -->
 

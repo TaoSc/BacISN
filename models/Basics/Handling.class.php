@@ -7,7 +7,14 @@
 			if ($offsetLimit)
 				$offsetLimit = ' LIMIT ' . $offsetLimit;
 
-			$request = Site::getDB()->query('SELECT ' . ($type === 'languages' ? 'code id' : 'id') . ' FROM ' . $type . ' WHERE ' . $condition . ' ORDER BY id ' . $order . $offsetLimit);
+			if ($type === 'languages')
+				$alias = 'code';
+			elseif ($type === 'friend_requests')
+				$alias = 'from_u';
+			else
+				$alias = null;
+
+			$request = Site::getDB()->query('SELECT ' . (!empty($alias) ? ($alias . ' ') : null) . 'id FROM ' . $type . ' WHERE ' . $condition . ' ORDER BY id ' . $order . $offsetLimit);
 			$ids = $request->fetchAll(\PDO::FETCH_ASSOC);
 
 			if ($idsOnly)
