@@ -1,17 +1,16 @@
 <div class="jumbotron">
-	<div class="container text-center">
+	<div class="container text-center<?php if ($currentMemberId) echo ' flex'; ?>">
 <?php
 		if ($currentMemberId) {
 ?>
-			<div class="pull-left">
-				<a href="<?php echo $linksDir . 'admin/members/' . $currentMember['id']; ?>" title="<?php echo $clauses->get('modify_profile'); ?>" class="btn btn-link btn-lg"><span class="user-action-icon glyphicon glyphicon-pencil"></span></a>
-			</div>
-			<div class="pull-right">
-				<a href="<?php echo $linksDir . 'members/' . $currentMember['slug']; ?>/" title="<?php echo $clauses->get('profile'); ?>" class="btn btn-link btn-lg"><span class="user-action-icon glyphicon glyphicon-user"></span></a>
+			<a href="<?php echo $linksDir . 'admin/members/' . $currentMember['id']; ?>" title="<?php echo $clauses->get('modify_profile'); ?>" class="btn btn-link btn-lg"><span class="user-action-icon glyphicon glyphicon-pencil"></span></a>
+
+			<div class="user-jumbo">
+				<img src="<?php echo Basics\Templates::getImg('avatars/' . $currentMember['avatar_slug'], $currentMember['avatar'], 100, 100); ?>" class="img-circle pull-left" alt="<?php echo $clauses->get('avatar'); ?>">
+				<h2 class="pull-right"><?php echo $currentMember['nickname']; ?></h2>
 			</div>
 
-			<img src="<?php echo Basics\Templates::getImg('avatars/' . $currentMember['avatar_slug'], $currentMember['avatar'], 100, 100); ?>" class="img-circle pull-left" alt="<?php echo $clauses->get('avatar'); ?>">
-			<h1><?php echo $currentMember['nickname']; ?></h1>
+			<a href="<?php echo $linksDir . 'members/' . $currentMember['slug']; ?>/" title="<?php echo $clauses->get('profile'); ?>" class="btn btn-link btn-lg"><span class="user-action-icon glyphicon glyphicon-user"></span></a>
 <?php
 		}
 		else {
@@ -57,17 +56,21 @@
 		</div>
 
 		<div class="chat-holder">
+<?php
+			foreach ($friends as $member) {
+?>
 			<div class="chat" data-chat="person1">
 				<div class="chat-history">
+
 					<div class="chat-header clearfix">
 						<i class="fa fa-bars"></i>
-						<img class="img-circle" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01_green.jpg" alt="avatar">
+						<a href="<?php echo $linksDir . 'members/' . $member['slug']; ?>/"><img class="img-circle" src="<?php echo Basics\Templates::getImg('avatars/' . $member['avatar_slug'], $member['avatar'], 100, 100); ?>" alt="<?php echo $clauses->get('avatar'); ?>"></a>
 
 						<div class="chat-about">
-							<div class="chat-with">Vincent Porter</div>
+							<div class="chat-with"><?php echo $member['nickname']; ?></div>
+							<?php echo $member['name']; ?>
 						</div>
 					</div>
-					<!-- end chat-header -->
 
 					<ul>
 						<li class="clearfix">
@@ -107,14 +110,16 @@
 						</li>
 					</ul>
 				</div>
-				<!-- end chat-history -->
 
 				<div class="chat-message clearfix">
-					<input name="message-to-send" id="message-to-send" placeholder="Type your message" type="text" class="float-left">
+					<input name="message-to-send" id="message-to-send" placeholder="<?php echo $clauses->get('message_placeholder'); ?>" type="text" class="float-left">
 					<button class="pull-right button-send"><?php echo $clauses->get('send'); ?></button>
 				</div>
-				<!-- end chat-message -->
+
 			</div>
+<?php
+			}
+?>
 		</div>
 	</div>
 <?php

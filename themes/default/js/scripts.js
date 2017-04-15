@@ -108,12 +108,12 @@ $(function() {
 			return false;
 		} else {
 			var findChat = $(this).attr('data-chat');
-			var personName = $(this).find('.name').text();
-			$('.chat-about .chat-with').html(personName);
+
 			$('.chat').removeClass('active-chat');
+			$('.chat[data-chat = ' + findChat + ']').addClass('active-chat');
+
 			$('.people-list .people .person').removeClass('active');
 			$(this).addClass('active');
-			$('.chat[data-chat = ' + findChat + ']').addClass('active-chat');
 		}
 	});
 

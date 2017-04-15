@@ -9,6 +9,7 @@
 				<tr>
 					<th><?php echo $clauses->get('nickname'); ?></th>
 					<th><?php echo $clauses->get('reg_date'); ?></th>
+					<th><?php echo $clauses->get('friends'); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -18,6 +19,7 @@
 					<tr>
 						<td><a href="<?php echo $linksDir . 'admin/members/' . $memberLoop['id']; ?>"><?php echo $memberLoop['nickname']; ?></a></td>
 						<td><?php echo \Basics\Dates::sexyDate($memberLoop['registration']['date']); ?></td>
+						<td><?php echo count((new \Members\Single($memberLoop['id']))->getFriends()); ?></td>
 					</tr>
 <?php
 				}

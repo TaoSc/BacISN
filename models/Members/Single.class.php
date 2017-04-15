@@ -58,6 +58,9 @@
 			$newLastName = htmlspecialchars($newLastName);
 			$newEmail = htmlspecialchars($newEmail);
 
+			if ($newBirthDate === '0000-00-00')
+				$newBirthDate = null;
+
 			$pwdBypass = empty($newPwd) ? true : false;
 			$nicknameTest = $newNickname !== $this->member['nickname'];
 			$namesTest = (!empty($newFirstName) OR !empty($newLastName));
@@ -65,14 +68,12 @@
 			if ($this->member AND Handling::check($newNickname, $newSlug, $newFirstName, $newLastName, $newEmail, $pwdBypass ? '123456' : $newPwd, $nicknameTest, (empty($newBirthDate)) ? '0000-00-01' : $newBirthDate, $namesTest) AND !empty($newType)) {
 				global $siteDir;
 
-				// we need to clear the password cache in session in case it has changed!
-
 				if (empty($newAvatar)) {
 					// $newAvatar = $this->member['avatar'];
 					$newAvatar = null;
 				}
 				else {
-					die('not ready yet.');
+					die('Not ready yet.');
 					$newAvatar = \Basics\Images::crop($newAvatar, 'avatars/' . $this->member['id'], [[100, 100]]);
 					if (!$newAvatar)
 						die('Une erreur est survenue lors de l\'envoi de votre avatar.');

@@ -23,10 +23,30 @@ a:active {
 }
 
 
+.flex {
+	display: flex;
+	align-items: center;
+}
+.page-header.no-margin.flex > h1 {
+	margin: 0 0 0 2rem;
+}
+
+
 .jumbotron {
 	padding: 1em;
 	overflow:hidden;
+	margin-bottom: 20px;
 }
+.jumbotron .user-jumbo {
+	margin: auto;
+}
+.jumbotron .user-jumbo img {
+    width: 6em;
+    height: 6em;
+	margin-right: 1em;
+}
+
+
 
 nav.navbar {
 	background-color: #d500f9;
@@ -41,6 +61,12 @@ nav.navbar a {
 nav.navbar a:hover,
 nav.navbar a:focus {
 	background-color: rgba(0, 0, 0, 0.38);
+}
+nav.navbar .dropdown-menu a {
+	color: #333;
+}
+nav.navbar .dropdown a[aria-expanded="true"] {
+	color: #d500f9;
 }
 nav.navbar input {
 	border: 0 !important;
@@ -143,8 +169,8 @@ button {
 }
 .people-list img {
 	float: left;
-	height: 2em;
-	width: 2em;
+	height: 3em;
+	width: 3em;
 }
 .people-list .about {
 	float: left;
@@ -187,6 +213,9 @@ button {
 .chat-holder .chat-header img {
 	float: left;
 	margin-top: -1em;
+	width: 4em;
+	height: 4em;
+	border: 2px solid;
 }
 .chat-holder .chat-header .chat-about {
 	float: left;
@@ -209,7 +238,7 @@ button {
 }
 
 .chat {
-	width: 58.42em;
+	width: calc(100% - 23em);
 	height: 45em;
 	float: left;
 	display: none;
@@ -293,7 +322,7 @@ button {
 	font-size: 10px;
 }
 .online {
-	color: #86BB71;
+	color: #00e676;
 }
 .offline {
 	color: #E38968;
@@ -327,14 +356,18 @@ button {
 
 @media only screen and (max-width: 480px) {
 	.chat .chat-header img {
-		height: 35px;
-		width: 35px;
+		height: 5rem;
+		width: 5rem;
 	}
 	.chat .chat-header .chat-about {
 		padding-left: 5px;
 	}
 }
 @media only screen and (max-width: 768px) {
+	.container[role="main"] {
+		padding: 0 0.5rem;
+	}
+
 	.chat-holder .chat-header i.fa-bars {
 		display: block !important;
 		margin-top: -20px !important;

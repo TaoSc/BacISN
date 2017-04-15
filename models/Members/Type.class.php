@@ -10,8 +10,7 @@
 			'news_publish',
 			'news_edit',
 			'comment_edit',
-			'comment_moderate',
-			'poll_create'
+			'comment_moderate'
 		];
 
 		public function __construct($id) {
@@ -91,7 +90,7 @@
 
 		public static function create($name, $rights) {
 			global $rights;
-			
+
 			$slug = \Basics\Strings::slug($name);
 			$slugBeing = \Basics\Handling::idFromSlug($slug, 'members_types', 'slug', false);
 

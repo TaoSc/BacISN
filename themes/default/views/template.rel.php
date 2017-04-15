@@ -58,6 +58,22 @@
 ?>
 				</ul>
 
+				<ul class="nav navbar-nav lang-selector pull-right">
+					<li class="dropdown">
+						<a data-toggle="dropdown" href="#null"><?php echo $activeLang['country_name']; ?> <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+<?php
+							foreach ($languagesList as $languageLoop)
+								echo '<li>
+									<a href="' . $linksDir . 'lang/' . $languageLoop['code'] . '/' . str_replace('%', '=', urlencode($location)) . '">
+										<span class="sprites ' . $languageLoop['code'] . ' flag"></span>' . $languageLoop['name'] . '
+									</a>
+								</li>';
+?>
+						</ul>
+					</li>
+				</ul>
+
 <?php
 				if ($currentMemberId) {
 ?>

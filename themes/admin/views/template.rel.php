@@ -37,7 +37,7 @@
 
 				<ul class="nav navbar-nav lang-selector pull-left">
 					<li class="dropdown">
-						<a data-toggle="dropdown" href="#null"><?php echo $actualLang['country_name']; ?> <b class="caret"></b></a>
+						<a data-toggle="dropdown" href="#null"><?php echo $activeLang['country_name']; ?> <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 <?php
 							foreach ($languagesList as $languageLoop)

@@ -5,8 +5,12 @@
 	if (!$member['edit_cond'])
 		error();
 	elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		if ($memberObj->setMember($_POST['nickname'], $_POST['first_name'], $_POST['last_name'], $member['email'], $_POST['birth'], $_POST['password'], $member['type_id'], $_POST['img']))
+		if ($memberObj->setMember($_POST['nickname'], $_POST['first_name'], $_POST['last_name'], $member['email'], $_POST['birth'], $_POST['password'], $member['type_id'], $_POST['img'])) {
+			if ($currentMemberId == $member['id'])
+				Basics\site::session('member', '');
+
 			header('Refresh: 0');
+		}
 		else
 			error($clauses->get('member_edit_fails'));
 	}

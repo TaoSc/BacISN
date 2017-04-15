@@ -37,21 +37,21 @@
 			if ($newSize) {
 				foreach ($this->image['sizes'] as $sizeLoop) {
 					if ($sizeLoop === $newSize)
-						die('Cette image a déjà été rognée avec cette taille.');
+						die('Error: can not crop the image twice. Abort.');
 				}
 
 				$this->image['sizes'][] = $newSize;
 				\Basics\Images::crop($this->image['address'], 'heroes/' . $this->image['slug'], [$newSize]);
 			}
-			
+
 			if ($newSlug !== $this->image['slug']) {
 				global $siteDir;
 
 				foreach ($this->image['sizes'] as $sizeKey) {
-					rename(\Basics\Templates::getImg('heroes/' . $this->image['slug'], $this->image['format'], $sizeKey[0], $sizeKey[1], false), 
+					rename(\Basics\Templates::getImg('heroes/' . $this->image['slug'], $this->image['format'], $sizeKey[0], $sizeKey[1], false),
 					       \Basics\Templates::getImg('heroes/' . $newSlug, $this->image['format'], $sizeKey[0],$sizeKey[1], false));
 				}
-				
+
 				rename($siteDir . 'images/heroes/' . $this->image['slug'] . '.' . $this->image['format'], $siteDir . 'images/heroes/' . $newSlug . '.' . $this->image['format']);
 			}
 
@@ -119,8 +119,8 @@
 				return false;
 
 			$request = \Basics\Site::getDB()->prepare('
-				INSERT INTO medias(id, ext, author_id, name, sizes, post_date, slug, type)
-				VALUES(?, ?, ?, ?, ?, NOW(), ?, ?)
+				INSERT INTO medias (id, ext, author_id, name, sizes, post_date, slug, type)
+				VALUES (?, ?, ?, ?, ?, NOW(), ?, ?)
 			');
 			$request->execute([
 				$imageIdentifier,

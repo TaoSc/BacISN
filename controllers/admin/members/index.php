@@ -6,15 +6,15 @@
             [type_id] => 1
             [nickname] => arthur
             [slug] => arthur
-            [first_name] => 
-            [last_name] => 
+            [first_name] =>
+            [last_name] =>
             [email] => agoldberg@montaigne-paris.fr
             [password] => 694947af650c7f5bf4e9c41bb83e383cded268fed3ee7f6e41c0a6d78967e6e4
             [avatar] => png
             [reg_date] => 2017-03-07
             [reg_time] => 11:46:37
-            [birth] => 
-            [name] => 
+            [birth] =>
+            [name] =>
             [avatar_slug] => default
             [registration] => Array
                 (

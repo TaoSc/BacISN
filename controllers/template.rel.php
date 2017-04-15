@@ -1,6 +1,6 @@
 <?php
-	$actualLang = $clauses->getLanguage();
-	$languagesList = Basics\Languages::getLanguages('code != \'' . $actualLang['code'] . '\' AND enabled = true', $actualLang['code']);
+	$activeLang = $clauses->getLanguage();
+	$languagesList = Basics\Languages::getLanguages('code != \'' . $activeLang['code'] . '\' AND enabled = true', $activeLang['code']);
 
 	if ($admin) {
 		$navigation = [
