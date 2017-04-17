@@ -73,7 +73,8 @@
 				$this->post['authors'] = [];
 				foreach ($this->post['authors_ids'] as $memberLoop)
 					$this->post['authors'][] = (new \Members\Single($memberLoop))->getMember();
-				$this->post['comments_nbr'] = \Comments\Handling::countComments(0, $this->post['id'], 'posts', $this->languageCheck);
+				// $this->post['comments_nbr'] = \Comments\Handling::countComments(0, $this->post['id'], 'posts', $this->languageCheck);
+				$this->post['comments_nbr'] = 0;
 
 				if ($this->post['raw_tags']) {
 					$condition = null;

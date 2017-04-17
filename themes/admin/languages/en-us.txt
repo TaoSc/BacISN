@@ -1,7 +1,6 @@
 admin_index			= You are in the administration interface of your site.
 create				= Create
-edit_news			= Edit a news
-edit_comment		= Edit a comment
+edit_message		= Edit message
 enable_for_language	= Enable for this language
 system_conf			= System Setup
 anonymous_coms		= Anonynous comments
@@ -14,7 +13,6 @@ default_users_type	= Default members type
 enable				= Enable
 disable				= Disable
 img_placeholder		= Type the URL of your image.
-enable_comments		= Enable comments
 enable_votes		= Enable votes
 act_as_deleted		= Act as deleted
 create_tag			= Create a tag

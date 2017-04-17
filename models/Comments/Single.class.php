@@ -6,7 +6,7 @@
 
 		public function __construct($id) {
 			$request = \Basics\Site::getDB()->prepare('
-				SELECT id, author_id, parent_id, post_id, post_type, hidden, content, language, DATE(post_date) date, TIME(post_date) time,
+				SELECT id, author_id, receiver_id, hidden, content, language, DATE(post_date) date, TIME(post_date) time,
 				DATE(modif_date) modif_date, TIME(modif_date) modif_time
 				FROM comments
 				WHERE id = ?
@@ -23,7 +23,7 @@
 			}
 		}
 
-		public function getComment($lineJump = true, $parsing = true) {
+		public function getMessage($lineJump = true, $parsing = true) {
 			if ($this->comment AND $parsing) {
 				global $language;
 
@@ -32,7 +32,7 @@
 					$this->comment['modif_time'] = \Basics\Dates::sexyTime($this->comment['modif_time']);
 				$this->comment['content'] = htmlspecialchars($this->comment['content']);
 				if ($lineJump)
-					$this->comment['content'] = \Basics\Strings::bbCode(nl2br($this->comment['content'], false));
+					$this->comment['content'] = nl2br($this->comment['content'], false);
 
 				$this->comment['author'] = (new \Members\Single($this->comment['author_id']))->getMember();
 				$this->comment['language'] = (new \Basics\Languages($this->comment['language'], false))->getLanguage($language);
@@ -48,7 +48,7 @@
 			if ($this->comment AND !empty($content) AND !empty($content) AND $this->comment['edit_cond']) {
 				$hidden = (int) $hidden;
 
-				$request = \Basics\Site::getDB()->prepare('UPDATE comments SET content = ?, hidden = ? WHERE id = ?');
+				$request = \Basics\Site::getDB()->prepare('UPDATE comments SET content = ?, hidden = ?, modif_date = NOW() WHERE id = ?');
 				$request->execute([$content, $hidden, $this->comment['id']]);
 
 				return true;
@@ -64,12 +64,9 @@
 				if ($realRemoval) {
 					$request = $db->prepare('DELETE FROM comments WHERE id = ?');
 					$request->execute([$this->comment['id']]);
-
-					$request = $db->prepare('UPDATE comments SET hidden = 2 WHERE parent_id = ?');
-					$request->execute([$this->comment['id']]);
 				}
 				else {
-					$request = $db->prepare('UPDATE comments SET hidden = 2 WHERE id = ? OR parent_id = ?');
+					$request = $db->prepare('UPDATE comments SET hidden = 2 WHERE id = ?');
 					$request->execute([$this->comment['id'], $this->comment['id']]);
 				}
 
@@ -79,15 +76,14 @@
 				return false;
 		}
 
-		public static function create($parentId, $postId, $postType, $content) {
+		public static function create($receiverId, $content) {
 			global $currentMemberId;
-			$parentId = (int) $parentId;
 
-			if ((\Basics\Site::parameter('anonymous_coms') OR $currentMemberId) AND !empty($content)) {
+			if ($currentMemberId AND $currentMemberId != $receiverId AND !empty($content) AND (new \Members\Single($receiverId))->befriend($currentMemberId)) {
 				global $language;
 
-				$request = \Basics\Site::getDB()->prepare('INSERT INTO comments (author_id, ip, parent_id, post_id, post_type, hidden, content, language, post_date) VALUES (?, ?, ?, ?, ?, 0, ?, ?, NOW())');
-				$request->execute([$currentMemberId, \Basics\Handling::ipAddress(), $parentId, $postId, $postType, $content, $language]);
+				$request = \Basics\Site::getDB()->prepare('INSERT INTO comments (author_id, ip, receiver_id, hidden, content, language, post_date) VALUES (?, ?, ?, 0, ?, ?, NOW())');
+				$request->execute([$currentMemberId, \Basics\Handling::ipAddress(), $receiverId, $content, $language]);
 
 				return true;
 			}

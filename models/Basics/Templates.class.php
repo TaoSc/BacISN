@@ -54,38 +54,11 @@
 			include $siteDir . $theme['dir'] . 'views/Templates/smallUserBox.php';
 		}
 
-		public static function postsList($postsArray, $emptyMessage = 'no_news') {
-			global $siteDir, $linksDir, $clauses, $theme, $params, $foldersDepth;
-			foreach ($postsArray as $key => $postLoop) {
-				$height = 100;
-				if ($postLoop['priority'] === 'important')
-					$width = 750;
-				elseif ($postLoop['priority'] === 'normal')
-					$width = 250;
-				elseif ($postLoop['priority'] === 'low') {
-					$width = 200;
-					$height = 70;
-				}
-
-				$postsArray[$key]['img_address'] = self::getImg('heroes/' . $postLoop['img']['slug'], $postLoop['img']['format'], $width, $height);
-			}
-
-			include $siteDir . $theme['dir'] . 'views/Templates/postsList.php';
-		}
-
-		public static function comment($comment, $languageCheck, $hidden, $commentsTemplate = false) {
+		public static function comment($message, $messagesTemplate = false) {
 			global $siteDir, $linksDir, $language, $clauses, $currentMemberId, $theme;
-			$commentAnswers = \Comments\Handling::getComments('parent_id = ' . $comment['id'], $languageCheck, $hidden, true);
 
-			$hasVoted = \Votes\Handling::did($comment['id'], 'comments');
-			$voteBtnsCond = ($hasVoted OR (!$currentMemberId AND !Site::parameter('anonymous_votes')) OR $comment['hidden'] == 1);
-
-			$lastCommentId = $comment['parent_id'];
-			$comment['recursivity'] = 0;
-			while ($lastCommentId) {
-				$lastCommentId = (new \Comments\Single($lastCommentId))->getComment(false, false)['parent_id'];
-				$comment['recursivity'] += 1;
-			}
+			$hasVoted = \Votes\Handling::did($message['id'], 'comments');
+			$voteBtnsCond = ($hasVoted OR (!$currentMemberId AND !Site::parameter('anonymous_votes')) OR $message['hidden'] == 1);
 
 			include $siteDir . $theme['dir'] . 'views/Templates/comment.php';
 		}

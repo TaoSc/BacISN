@@ -6,7 +6,7 @@
 			<a href="<?php echo $linksDir . 'admin/members/' . $currentMember['id']; ?>" title="<?php echo $clauses->get('modify_profile'); ?>" class="btn btn-link btn-lg"><span class="user-action-icon glyphicon glyphicon-pencil"></span></a>
 
 			<div class="user-jumbo">
-				<img src="<?php echo Basics\Templates::getImg('avatars/' . $currentMember['avatar_slug'], $currentMember['avatar'], 100, 100); ?>" class="img-circle pull-left" alt="<?php echo $clauses->get('avatar'); ?>">
+				<img src="<?php echo Basics\Templates::getImg('avatars/' . $currentMember['avatar']['slug'], $currentMember['avatar']['format'], 100, 100); ?>" class="img-circle pull-left" alt="<?php echo $clauses->get('avatar'); ?>">
 				<h2 class="pull-right"><?php echo $currentMember['nickname']; ?></h2>
 			</div>
 
@@ -40,11 +40,11 @@
 				foreach ($friends as $member) {
 ?>
 					<li class="clearfix person" data-chat="person<?php echo $i; ?>">
-						<img class="img-circle" src="<?php echo Basics\Templates::getImg('avatars/' . $member['avatar_slug'], $member['avatar'], 100, 100); ?>" alt="<?php echo $clauses->get('avatar'); ?>">
+						<img class="img-circle" src="<?php echo Basics\Templates::getImg('avatars/' . $member['avatar']['slug'], $member['avatar']['format'], 100, 100); ?>" alt="<?php echo $clauses->get('avatar'); ?>">
 						<div class="about">
 							<span class="name"><?php echo $member['nickname']; ?></span>
 							<div class="status">
-								<i class="fa fa-circle online"></i> online
+								<i class="fa fa-circle online"></i> <?php echo $clauses->get('online'); ?>
 							</div>
 						</div>
 					</li>
@@ -64,7 +64,7 @@
 
 					<div class="chat-header clearfix">
 						<i class="fa fa-bars"></i>
-						<a href="<?php echo $linksDir . 'members/' . $member['slug']; ?>/"><img class="img-circle" src="<?php echo Basics\Templates::getImg('avatars/' . $member['avatar_slug'], $member['avatar'], 100, 100); ?>" alt="<?php echo $clauses->get('avatar'); ?>"></a>
+						<a href="<?php echo $linksDir . 'members/' . $member['slug']; ?>/"><img class="img-circle" src="<?php echo Basics\Templates::getImg('avatars/' . $member['avatar']['slug'], $member['avatar']['format'], 100, 100); ?>" alt="<?php echo $clauses->get('avatar'); ?>"></a>
 
 						<div class="chat-about">
 							<div class="chat-with"><?php echo $member['nickname']; ?></div>
@@ -123,5 +123,6 @@
 		</div>
 	</div>
 <?php
-	Comments\Handling::view($currentMemberId, 'posts');
+	foreach ($friends as $member)
+		Comments\Handling::view($member['id']);
 	}

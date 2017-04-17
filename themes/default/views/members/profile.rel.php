@@ -1,51 +1,54 @@
 <div class="row">
 	<div class="col-lg-12">
-		<div class="page-header no-margin flex">
-			<img src="<?php echo Basics\Templates::getImg('avatars/' . $member['avatar_slug'], $member['avatar'], 100, 100); ?>" class="img-circle pull-left" alt="<?php echo $clauses->get('avatar'); ?>">
-			<h1>
+		<div class="content-profile-page">
+			<div class="profile-user-page card">
+				<div class="img-user-profile">
+					<img class="profile-bgHome" src="images/covers/default.png">
+					<img class="avatar" src="<?php echo Basics\Templates::getImg('avatars/' . $member['avatar']['slug'], $member['avatar']['format'], 100, 100); ?>" class="img-circle pull-left" alt="<?php echo $clauses->get('avatar'); ?>">
+				</div>
+
 <?php
-				echo $member['nickname'];
-				if (!Basics\Site::parameter('private_emails') AND $member['email'])
-					echo '<a href="mailto:' . $member['email'] . '" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-envelope"></span> ' . $clauses->get('send_message') . '</a>';
+				if ($currentMemberId) {
 ?>
-			</h1>
+					<button><?php echo $clauses->get('request_friendship'); ?></button>
+<?php
+				}
+?>
+
+				<div class="user-profile-data">
+					<h1>
+<?php
+						echo $member['nickname'];
+						if (!Basics\Site::parameter('private_emails') AND $member['email'])
+							echo ' <a href="mailto:' . $member['email'] . '" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-envelope"></span> ' . $clauses->get('send_message') . '</a>';
+?>
+					</h1>
+				</div>
+
+				<div class="description-profile">
+<?php
+					echo $clauses->get('reg_date') . ' : ';
+					Basics\Templates::dateTime($member['registration']['date'], $member['registration']['time']);
+
+					if ($member['name'])
+						echo ' | ' . $clauses->get('name') . ' : ' . $member['name'];
+
+					if ($member['birth'])
+						echo ' | ' . $clauses->get('age') . ' : ' . Basics\Dates::age($member['birth']) . ' ' . $clauses->get('years_old');
+
+					if (!Basics\Site::parameter('private_emails') AND $member['email'])
+						echo ' | ' . $clauses->get('email') . ' : ' . $member['email'];
+?>
+				</div>
+			</div>
 		</div>
-
-		<dl class="dl-horizontal">
-			<dt><?php echo $clauses->get('reg_date'); ?></dt>
-			<dd><?php Basics\Templates::dateTime($member['registration']['date'], $member['registration']['time']); ?></dd>
-<?php
-			if ($member['name']) {
-?>
-				<dt><?php echo $clauses->get('name'); ?></dt>
-				<dd><?php echo $member['name']; ?></dd>
-<?php
-			}
-
-			if ($member['birth']) {
-?>
-				<dt><?php echo $clauses->get('age'); ?></dt>
-				<dd><?php echo Basics\Dates::age($member['birth']) . ' ' . $clauses->get('years_old'); ?></dd>
-<?php
-			}
-
-			if (!Basics\Site::parameter('private_emails') AND $member['email']) {
-?>
-				<dt><?php echo $clauses->get('email'); ?></dt>
-				<dd><?php echo $member['email']; ?></dd>
-<?php
-			}
-?>
-			<dt><?php echo $clauses->get('type'); ?></dt>
-			<dd><a href="<?php echo $linksDir . 'members/types/' . $member['type']['slug']; ?>"><?php echo $member['type']['name']; ?></a></dd>
-		</dl>
 
 <?php
 		if ($currentMemberId) {
 			echo '<hr>';
 
 			if ($currentMemberId == $member['id'])
-				echo $clauses->get('your_profile');
+				echo $clauses->get('your_profile') . ' <a href="' . $linksDir . 'admin/members/' . $currentMember['id'] . '">' . $clauses->get('modify_profile') . ' <span class="glyphicon glyphicon-pencil"></span></a>';
 			elseif (!$isFriend AND !$requestPending)
 				echo '<a class="btn btn-primary btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/request" role="button">' . $clauses->get('request_friendship') . '</a>';
 			elseif (!$isFriend AND $requestPendingFromYou) {

@@ -18,7 +18,7 @@
 			if ($this->image) {
 				$this->image['sizes'] = json_decode($this->image['sizes'], true);
 				$this->image['sizes_nbr'] = count($this->image['sizes']);
-				$this->image['address'] = $subDir . 'images/heroes/' . $this->image['slug'] . '.' . $this->image['format'];
+				$this->image['address'] = $subDir . 'images/avatars/' . $this->image['slug'] . '.' . $this->image['format'];
 			}
 		}
 
@@ -41,18 +41,18 @@
 				}
 
 				$this->image['sizes'][] = $newSize;
-				\Basics\Images::crop($this->image['address'], 'heroes/' . $this->image['slug'], [$newSize]);
+				\Basics\Images::crop($this->image['address'], 'avatars/' . $this->image['slug'], [$newSize]);
 			}
 
 			if ($newSlug !== $this->image['slug']) {
 				global $siteDir;
 
 				foreach ($this->image['sizes'] as $sizeKey) {
-					rename(\Basics\Templates::getImg('heroes/' . $this->image['slug'], $this->image['format'], $sizeKey[0], $sizeKey[1], false),
-					       \Basics\Templates::getImg('heroes/' . $newSlug, $this->image['format'], $sizeKey[0],$sizeKey[1], false));
+					rename(\Basics\Templates::getImg('avatars/' . $this->image['slug'], $this->image['format'], $sizeKey[0], $sizeKey[1], false),
+					       \Basics\Templates::getImg('avatars/' . $newSlug, $this->image['format'], $sizeKey[0],$sizeKey[1], false));
 				}
 
-				rename($siteDir . 'images/heroes/' . $this->image['slug'] . '.' . $this->image['format'], $siteDir . 'images/heroes/' . $newSlug . '.' . $this->image['format']);
+				rename($siteDir . 'images/avatars/' . $this->image['slug'] . '.' . $this->image['format'], $siteDir . 'images/avatars/' . $newSlug . '.' . $this->image['format']);
 			}
 
 			$request = \Basics\Site::getDB()->prepare('UPDATE medias SET name = ?, slug = ?, sizes = ? WHERE id = ?');
@@ -73,7 +73,7 @@
 					if (in_array($size, $this->image['sizes'])) {
 						$sizeKey = array_search($size, $this->image['sizes']);
 
-						unlink(\Basics\Templates::getImg('heroes/' . $this->image['slug'], $this->image['format'], $this->image['sizes'][$sizeKey][0], $this->image['sizes'][$sizeKey][1], false));
+						unlink(\Basics\Templates::getImg('avatars/' . $this->image['slug'], $this->image['format'], $this->image['sizes'][$sizeKey][0], $this->image['sizes'][$sizeKey][1], false));
 
 						unset($this->image['sizes'][$sizeKey]);
 
@@ -89,7 +89,7 @@
 					$request = $db->prepare('DELETE FROM medias WHERE type = ? AND id = ?');
 					$request->execute(['images', $this->image['id']]);
 
-					$filesList = glob($siteDir . 'images/heroes/' . $this->image['slug'] . '*.' . $this->image['format']);
+					$filesList = glob($siteDir . 'images/avatars/' . $this->image['slug'] . '*.' . $this->image['format']);
 					foreach ($filesList as $sizeLoop)
 						unlink($sizeLoop);
 				}
@@ -113,9 +113,9 @@
 				return false;
 
 			$imageIdentifier = \Basics\Strings::identifier();
-			$imageExtension = \Basics\Images::crop($imageAddress, 'heroes/' . $imageSlug, $imageSizes);
+			$imageExtension = \Basics\Images::crop($imageAddress, 'avatars/' . $imageSlug, $imageSizes);
 
-			if (!copy($imageAddress, $siteDir . 'images/heroes/' . $imageSlug . '.' . $imageExtension))
+			if (!copy($imageAddress, $siteDir . 'images/avatars/' . $imageSlug . '.' . $imageExtension))
 				return false;
 
 			$request = \Basics\Site::getDB()->prepare('

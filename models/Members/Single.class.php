@@ -6,7 +6,7 @@
 
 		public function __construct($id) {
 			$request = \Basics\Site::getDB()->prepare('
-				SELECT id, type_id, nickname, slug, first_name, last_name, email, password, avatar, DATE(registration) reg_date, TIME(registration) reg_time, birth
+				SELECT id, type_id, nickname, slug, first_name, last_name, email, password, avatar avatar_id, DATE(registration) reg_date, TIME(registration) reg_time, birth
 				FROM members
 				WHERE id = ?
 			');
@@ -32,12 +32,13 @@
 				else
 					$this->member['name'] = false;
 
-				if (!$this->member['avatar']) {
-					$this->member['avatar_slug'] = 'default';
-					$this->member['avatar'] = 'png';
+				if (!$this->member['avatar_id']) {
+					$this->member['avatar']['slug'] = 'default';
+					$this->member['avatar']['format'] = 'png';
 				}
-				else
-					$this->member['avatar_slug'] = $this->member['slug'];
+				else {
+					$this->member['avatar'] = (new \Medias\Image($this->member['avatar_id']))->getImage();
+				}
 
 				if ($this->member['birth']) {
 					$this->member['age'] = \Basics\Dates::age($this->member['birth']);
@@ -68,19 +69,13 @@
 			if ($this->member AND Handling::check($newNickname, $newSlug, $newFirstName, $newLastName, $newEmail, $pwdBypass ? '123456' : $newPwd, $nicknameTest, (empty($newBirthDate)) ? '0000-00-01' : $newBirthDate, $namesTest) AND !empty($newType)) {
 				global $siteDir;
 
-				if (empty($newAvatar)) {
-					// $newAvatar = $this->member['avatar'];
-					$newAvatar = null;
-				}
-				else {
-					die('Not ready yet.');
-					$newAvatar = \Basics\Images::crop($newAvatar, 'avatars/' . $this->member['id'], [[100, 100]]);
-					if (!$newAvatar)
-						die('Une erreur est survenue lors de l\'envoi de votre avatar.');
 
-					if ($this->member['img_id'] !== 'default' AND $newAvatar !== $this->member['img']) {
-						unlink($siteDir . '/images/avatars/' . $this->member['id'] . '-100x100.' . $this->member['img']);
-					}
+				// Buggy when overwriting the image
+				if (empty($newAvatar) OR !$newAvatar = \Medias\Image::create($newAvatar, $newNickname, [[100, 100]]))
+					$newAvatar = $this->member['avatar_id'];
+
+				if ($newAvatar == $this->member['avatar_id'] AND $newSlug !== $this->member['slug']) {
+					(new \Medias\Image($this->member['avatar_id']))->setImage($newNickname, $newSlug, null, null); // if the image slug is already taken nothing will change for it, the error is silenced.
 				}
 
 				$request = \Basics\Site::getDB()->prepare('UPDATE members SET nickname = ?, slug = ?, avatar = ?, first_name = ?, last_name = ?, email = ?, birth = ?, password = ?, type_id = ? WHERE id = ?');

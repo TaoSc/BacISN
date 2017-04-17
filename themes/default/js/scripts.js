@@ -51,27 +51,6 @@ $(function() {
 
 			return false;
 		});
-
-		$('#comments').parent().on('click', 'button.answer-btn', function() {
-			var commentId = $(this).attr('value');
-
-			$('label[for=content]').text($(this).text());
-			$('textarea#content').focus();
-			$('#parent_id').attr('value', $(this).attr('value'));
-			if ($('#cancel-reply').css('display') === 'none')
-				$('#cancel-reply').show();
-
-			return false;
-		});
-
-		$('#comments').parent().on('click', '.comment-create #cancel-reply', function() {
-			$('label[for=content]').text(commentCreateLabel);
-			$('textarea[name=content]').focus();
-			$('#parent_id').attr('value', 0);
-			$('#cancel-reply').hide();
-
-			return false;
-		});
 	}
 
 	// Toggle Sidebar
