@@ -194,16 +194,10 @@
 				$request = $db->prepare('DELETE FROM members WHERE id = ?');
 				$request->execute([$this->member['id']]);
 
-				$request = $db->prepare('UPDATE categories SET author_id = ? WHERE author_id = ?');
-				$request->execute([1, $this->member['id']]);
-
 				$request = $db->prepare('DELETE FROM comments WHERE author_id = ?');
 				$request->execute([$this->member['id']]);
 
-				$request = $db->prepare('DELETE FROM posts WHERE author_id = ?');
-				$request->execute([$this->member['id']]);
-
-				$request = $db->prepare('DELETE FROM likes WHERE author_id = ?');
+				$request = $db->prepare('DELETE FROM votes WHERE author_id = ?');
 				$request->execute([$this->member['id']]);
 
 				return true;

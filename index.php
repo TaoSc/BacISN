@@ -140,11 +140,8 @@
 	elseif ($params[0] === 'lang' AND isset($params[2]) AND $foldersDepth === 2)
 		include $siteDir . 'controllers/lang.rel.php';
 
-	elseif ($params[0] === 'news' AND isset($params[1]) AND $foldersDepth === 1)
-		include $siteDir . 'controllers/news/news.rel.php';
-
-	elseif ($params[0] === 'comments' AND isset($params[5]) AND $foldersDepth === 5)
-		include $siteDir . 'controllers/comments/handling.ajax.php';
+	elseif ($params[0] === 'messages' AND isset($params[1]) AND is_numeric($params[1]) AND $foldersDepth === 1)
+		include $siteDir . 'controllers/messages/handling.ajax.php';
 
 	elseif ($params[0] === 'members' AND isset($params[3]) AND $params[1] === 'login' AND $params[2] === 'ajax' AND $foldersDepth === 3)
 		include $siteDir . 'controllers/members/login.ajax.php';
@@ -153,7 +150,7 @@
 	elseif ($params[0] === 'members' AND isset($params[1]) AND $params[2] === 'index' AND $foldersDepth === 2)
 		include $siteDir . 'controllers/members/profile.rel.php';
 	elseif ($params[0] === 'members' AND isset($params[1]) AND isset($params[2]) AND $foldersDepth === 2)
-		include $siteDir . 'controllers/members/friendship.php';
+		include $siteDir . 'controllers/members/friendship.rel.php';
 
 	elseif ($params[0] === 'votes' AND isset($params[2]) AND $foldersDepth === 2)
 		include $siteDir . 'controllers/votes/ajax.rel.php';

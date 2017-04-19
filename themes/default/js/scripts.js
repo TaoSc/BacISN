@@ -30,29 +30,6 @@ $(function() {
 		return false;
 	});
 
-	if ($('#comments').html()) {
-		var commentCreateLabel = $('label[for=content]').text(),
-			commentsLocation = $('input#location').attr('value'),
-			commentsLatestLink = null;
-
-		$('#comments').parent().on('click', '.comments-toolbox a', function() {
-			actualLink = $(this).attr('href');
-			if (commentsLatestLink !== actualLink) {
-				var get = $.get(actualLink);
-				get.done(function(data) {
-					commentsLatestLink = actualLink;
-					$('#comments').replaceWith(data);
-					$('#comments input#location').attr('value', commentsLocation);
-					$('.comments-list img').lazyload({
-						effect: 'fadeIn'
-					});
-				});
-			}
-
-			return false;
-		});
-	}
-
 	// Toggle Sidebar
 	$('.chat-header i.fa-bars').click(function() {
 		$('.people-list').toggleClass('sidebar-visible');

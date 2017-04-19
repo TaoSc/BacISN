@@ -3,37 +3,6 @@
 		<legend><?php echo $clauses->get('system_conf'); ?></legend>
 
 		<div class="form-group">
-			<label class="col-md-4 col-xs-3 control-label" for="coms_per_page"><?php echo $clauses->get('coms_per_page'); ?></label>
-			<div class="col-md-4 col-xs-9">
-				<input name="coms_per_page" id="coms_per_page" type="number" class="form-control" value="<?php echo Basics\Site::parameter('coms_per_page'); ?>" required>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label class="col-md-4 col-xs-3 control-label" for="anonymous_coms"><?php echo $clauses->get('anonymous_coms'); ?></label>
-			<div class="col-md-4 col-xs-9">
-				<div class="checkbox">
-					<label for="anonymous_coms">
-						<input type="checkbox" name="anonymous_coms" id="anonymous_coms" value="on"<?php if (Basics\Site::parameter('anonymous_coms')) echo ' checked'; ?>>
-						<?php echo $clauses->get('enable'); ?>
-					</label>
-				</div>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label class="col-md-4 col-xs-3 control-label" for="anonymous_votes"><?php echo $clauses->get('anonymous_votes'); ?></label>
-			<div class="col-md-4 col-xs-9">
-				<div class="checkbox">
-					<label for="anonymous_votes">
-						<input type="checkbox" name="anonymous_votes" id="anonymous_votes" value="on"<?php if (Basics\Site::parameter('anonymous_votes')) echo ' checked'; ?>>
-						<?php echo $clauses->get('enable'); ?>
-					</label>
-				</div>
-			</div>
-		</div>
-
-		<div class="form-group">
 			<label class="col-md-4 col-xs-3 control-label" for="default_language"><?php echo $clauses->get('default_language'); ?></label>
 			<div class="col-md-4 col-xs-9">
 				<select id="default_language" name="default_language" class="form-control">

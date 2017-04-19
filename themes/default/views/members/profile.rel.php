@@ -9,9 +9,20 @@
 
 <?php
 				if ($currentMemberId) {
-?>
-					<button><?php echo $clauses->get('request_friendship'); ?></button>
-<?php
+					if ($currentMemberId == $member['id'])
+						echo '<a class="btn btn-info" href="' . $linksDir . 'admin/members/' . $currentMember['id'] . '"><span class="glyphicon glyphicon-pencil"></span> ' . $clauses->get('modify_profile') . '</a>';
+					elseif (!$isFriend AND !$requestPending)
+						echo '<a class="btn btn-primary" href="' . $linksDir . 'members/' . $member['slug'] . '/request" role="button">' . $clauses->get('request_friendship') . '</a>';
+					elseif (!$isFriend AND $requestPendingFromYou) {
+						echo '<button class="btn btn-default" disabled>' . $clauses->get('reply_awaits') . '</button>',
+							 '<a class="btn btn-info" href="' . $linksDir . 'members/' . $member['slug'] . '/cancel" role="button">' . $clauses->get('cancel') . '</a>';
+					}
+					elseif (!$isFriend AND $requestPendingFromThem) {
+						echo '<a class="btn btn-success" href="' . $linksDir . 'members/' . $member['slug'] . '/accept" role="button">' . $clauses->get('accept') . '</a>',
+							 '<a class="btn btn-danger" href="' . $linksDir . 'members/' . $member['slug'] . '/decline" role="button">' . $clauses->get('decline') . '</a>';
+					}
+					else
+						echo '<button class="btn btn-default" disabled>' . $clauses->get('befriended') . '</button>';
 				}
 ?>
 
@@ -42,26 +53,5 @@
 				</div>
 			</div>
 		</div>
-
-<?php
-		if ($currentMemberId) {
-			echo '<hr>';
-
-			if ($currentMemberId == $member['id'])
-				echo $clauses->get('your_profile') . ' <a href="' . $linksDir . 'admin/members/' . $currentMember['id'] . '">' . $clauses->get('modify_profile') . ' <span class="glyphicon glyphicon-pencil"></span></a>';
-			elseif (!$isFriend AND !$requestPending)
-				echo '<a class="btn btn-primary btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/request" role="button">' . $clauses->get('request_friendship') . '</a>';
-			elseif (!$isFriend AND $requestPendingFromYou) {
-				echo $clauses->get('replay_awaits'),
-					 '<a class="btn btn-info btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/cancel" role="button">' . $clauses->get('cancel') . '</a>';
-			}
-			elseif (!$isFriend AND $requestPendingFromThem) {
-				echo '<a class="btn btn-success btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/accept" role="button">' . $clauses->get('accept') . '</a>',
-					 '<a class="btn btn-danger btn-lg" href="' . $linksDir . 'members/' . $member['slug'] . '/decline" role="button">' . $clauses->get('decline') . '</a>';
-			}
-			else
-				echo '<b>' . $clauses->get('befriended') . '</b>';
-		}
-?>
 	</div>
 </div>

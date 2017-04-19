@@ -18,8 +18,8 @@
 				global $currentMemberId, $rights;
 
 				$this->comment['author_id'] = (int) $this->comment['author_id'];
-				$this->comment['removal_cond'] = 
-				$this->comment['edit_cond'] = ($currentMemberId AND (($currentMemberId === $this->comment['author_id'] AND $rights['comment_edit'] AND $this->comment['hidden'] != 2) OR $rights['comment_moderate']));
+				$this->comment['removal_cond'] =
+				$this->comment['edit_cond'] = ($currentMemberId AND (($currentMemberId === $this->comment['author_id'] AND $rights['messages_edit'] AND $this->comment['hidden'] != 2) OR $rights['messages_moderate']));
 			}
 		}
 
@@ -36,15 +36,15 @@
 
 				$this->comment['author'] = (new \Members\Single($this->comment['author_id']))->getMember();
 				$this->comment['language'] = (new \Basics\Languages($this->comment['language'], false))->getLanguage($language);
-				$this->comment['likes'] = \Votes\Handling::number($this->comment['id'], 'comments');
-				$this->comment['dislikes'] = \Votes\Handling::number($this->comment['id'], 'comments', -1);
+				$this->comment['likes'] = \Votes\Handling::number($this->comment['id'], 'messages');
+				$this->comment['dislikes'] = \Votes\Handling::number($this->comment['id'], 'messages', -1);
 				$this->comment['popularity'] = $this->comment['likes'] - $this->comment['dislikes'];
 			}
 
 			return $this->comment;
 		}
 
-		public function setComment($content, $hidden = false) {
+		public function setMessage($content, $hidden = false) {
 			if ($this->comment AND !empty($content) AND !empty($content) AND $this->comment['edit_cond']) {
 				$hidden = (int) $hidden;
 
@@ -57,7 +57,7 @@
 				return false;
 		}
 
-		public function deleteComment($realRemoval = true) {
+		public function deleteMessage($realRemoval = true) {
 			if ($this->comment AND $this->comment['removal_cond']) {
 				$db = \Basics\Site::getDB();
 

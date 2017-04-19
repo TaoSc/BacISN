@@ -77,6 +77,16 @@
 <?php
 				if ($currentMemberId) {
 ?>
+
+				<ul class="nav navbar-nav notification pull-right">
+					<li class="dropdown">
+						<a data-toggle="dropdown" href="#null"><i class="fa fa-bell"></i> <?php echo (isset($notificationsCount) AND $notificationsCount > 0 )? '(' . $notificationsCount . ')' : '';?></a>
+						<ul class="dropdown-menu">
+
+						</ul>
+					</li>
+				</ul>
+
 				<form class="navbar-form navbar-right">
 					<div class="form-group">
 						<div class="input-group">

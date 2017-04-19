@@ -6,11 +6,8 @@
 		public static $rights = [
 			'admin_access',
 			'config_edit',
-			'news_create',
-			'news_publish',
-			'news_edit',
-			'comment_edit',
-			'comment_moderate'
+			'messages_edit',
+			'messages_moderate'
 		];
 
 		public function __construct($id) {

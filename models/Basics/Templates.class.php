@@ -57,9 +57,9 @@
 		public static function comment($message, $messagesTemplate = false) {
 			global $siteDir, $linksDir, $language, $clauses, $currentMemberId, $theme;
 
-			$hasVoted = \Votes\Handling::did($message['id'], 'comments');
-			$voteBtnsCond = ($hasVoted OR (!$currentMemberId AND !Site::parameter('anonymous_votes')) OR $message['hidden'] == 1);
+			$hasVoted = \Votes\Handling::did($message['id'], 'messages');
+			$voteBtnsCond = ($hasVoted OR !$currentMemberId OR $message['hidden'] == 1);
 
-			include $siteDir . $theme['dir'] . 'views/Templates/comment.php';
+			include $siteDir . $theme['dir'] . 'views/Templates/message.php';
 		}
 	}

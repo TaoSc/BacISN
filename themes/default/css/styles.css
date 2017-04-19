@@ -264,6 +264,9 @@ button {
 .chat .chat-message {
     padding: 15px;
 }
+.chat .chat-history .message .btn-inverse {
+	color: grey;
+}
 .chat .chat-message textarea,
 .chat .chat-message input {
     width: 100%;
@@ -416,19 +419,14 @@ button {
     margin-top: -10em;
     box-shadow: 0 0 .1em rgba(0, 0, 0, 0.35);
 }
-.profile-user-page button {
-    position: absolute;
-    font-size: 13px;
+.profile-user-page > a.btn,
+.profile-user-page > button.btn {
     font-weight: bold;
-    cursor: pointer;
-    background: #3498db;
-    border: 1px solid #2487c9;
-    color: #fff;
-    outline: none;
     border-radius: 0 .6em .6em 0;
     padding: .80em;
+
 }
-.profile-user-page button:hover {
+.profile-user-page > a.btn:hover {
     background: #51a7e0;
     transition: background .2s ease-in-out;
     border: 1px solid #2487c9;
@@ -512,3 +510,10 @@ button {
 .profile-user-page .data-user li a:hover span {
     color: #3498db;
 }
+.notification a  {
+font-weight: bold;
+}
+.not_seen {
+background-color:#f2f2f2;
+}
+

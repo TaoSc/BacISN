@@ -2,7 +2,7 @@
 	namespace Basics;
 
 	class Handling {
-		public static function getList($condition = 'TRUE', $type = 'comments', $namespaces = 'Comments', $accessor = 'Comment', $offsetLimit = false, $idsOnly = false, $ascending = false, $methodParams = null, ...$instanceParams) {
+		public static function getList($condition = 'TRUE', $type = 'comments', $namespaces = 'Comments', $accessor = 'Message', $offsetLimit = false, $idsOnly = false, $ascending = false, $methodParams = null, ...$instanceParams) {
 			$order = $ascending ? 'ASC' : 'DESC';
 			if ($offsetLimit)
 				$offsetLimit = ' LIMIT ' . $offsetLimit;
@@ -68,13 +68,13 @@
 			return $tempArray;
 		}
 
-		public static function countEntries($table = 'posts', $conditions = 'TRUE') {
+		public static function countEntries($table = 'messages', $conditions = 'TRUE') {
 			$request = Site::getDB()->query('SELECT COUNT(*) total FROM ' . $table . ' WHERE ' . $conditions);
 
 			return (int) $request->fetch(\PDO::FETCH_ASSOC)['total'];
 		}
 
-		public static function idFromSlug($slug, $tableName = 'posts', $column = 'slug', $noLanguage = true) {
+		public static function idFromSlug($slug, $tableName = 'messages', $column = 'slug', $noLanguage = true) {
 			if ($noLanguage !== true) {
 				global $clauses;
 
@@ -88,7 +88,7 @@
 			}
 		}
 
-		public static function latestId($from = 'posts', $select = 'id') {
+		public static function latestId($from = 'messages', $select = 'id') {
 			$request = Site::getDB()->query('SELECT ' . $select . ' FROM ' . $from . ' ORDER BY id DESC LIMIT 1');
 
 			return $request->fetch(\PDO::FETCH_ASSOC)[$select];
