@@ -1,11 +1,11 @@
 <?php
-	namespace Comments;
+	namespace Messages;
 
 	class Handling {
-		public static function getMessages($condition = 'TRUE', $languageCheck = false, $hidden = true, $ascending = false, $offsetLimit = false, $idsOnly = false, $lineJump = true) {
+		public static function getMessages($condition = 'TRUE', $languageCheck = false, $hidden = true, $ascending = true, $offsetLimit = false, $idsOnly = false, $lineJump = true) {
 			global $language;
 
-			return \Basics\Handling::getList($condition, 'comments', 'Comments', 'Message', $offsetLimit, $idsOnly, $ascending, $lineJump);
+			return \Basics\Handling::getList($condition, 'comments', 'Messages', 'Message', $offsetLimit, $idsOnly, $ascending, $lineJump);
 		}
 
 		public static function view($receiverId, $languageCheck = false, $hidden = true) {

@@ -34,7 +34,6 @@
 			$create = false;
 			$type = new Members\Type($params[2]);
 
-			// A little bit heavy
 			$rightsOfTheType = $type->getRights();
 			$rightsArray = [];
 			foreach ($rightsNames as $rightName) {

@@ -16,19 +16,6 @@
 				 '<script async src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>' . PHP_EOL;
 		}
 
-		public static function textList($array) {
-			$list = null;
-
-			foreach ($array as $element) {
-				$list .= '
-					<span class="label label-default">' . $element['label'] . '</span>
-					<a href="' . $element['link'] . '">' . $element['text'] . '</a>
-					<hr>' . PHP_EOL;
-			}
-
-			echo trim($list, '<hr>' . PHP_EOL);
-		}
-
 		public static function dateTime($date, $time) {
 			global $clauses;
 
@@ -46,12 +33,6 @@
 			}
 
 			return $dir . 'images/' . $slug . '-' . $width . 'x' . $height .  '.' . $extension;
-		}
-
-		public static function smallUserBox($member, $size = 'col-sm-5') {
-			global $siteDir, $linksDir, $clauses, $theme;
-
-			include $siteDir . $theme['dir'] . 'views/Templates/smallUserBox.php';
 		}
 
 		public static function comment($message, $messagesTemplate = false) {

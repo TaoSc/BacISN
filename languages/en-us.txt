@@ -21,6 +21,7 @@ cancel				= Cancel
 image				= Image
 members				= Members
 your_profile		= Your profile.
+add_friends			= Add your first friend
 request_friendship	= Add
 accept				= Accept
 decline				= Decline

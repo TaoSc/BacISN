@@ -12,18 +12,22 @@
 	}
 	else {
 		$navigation = [
-			['caption' => $clauses->get('home'),		'link' => 'index',			'icon' => 'home']
+			['caption' => $clauses->get('home'), 'link' => 'index', 'icon' => 'home']
 		];
 
 		if ($currentMemberId) {
-			$navigation = array_merge($navigation, [['caption' => $clauses->get('profile'),		'link' => 'members/' . $currentMember['slug'] . '/',	'icon' => 'user']]);
+			$navigation = array_merge($navigation, [['caption' => $clauses->get('profile'), 'link' => 'members/' . $currentMember['slug'] . '/', 'icon' => 'user']]);
 
 			if ($rights['admin_access'])
-				$navigation = array_merge($navigation, [['caption' => $clauses->get('admin'),	'link' => 'admin/',	'icon' => 'cog']]);
+				$navigation = array_merge($navigation, [['caption' => $clauses->get('admin'), 'link' => 'admin/', 'icon' => 'cog']]);
 
 			$navigationRight = [
-				['caption' => $clauses->get('log_out'),		'link' => 'members/logout/' . str_replace('%', '=', urlencode($location)),		'icon' => 'log-out']
+				['caption' => $clauses->get('log_out'), 'link' => 'members/logout/' . str_replace('%', '=', urlencode($location)), 'icon' => 'log-out']
 			];
+
+			$currentMemberObj = new Members\Single($currentMemberId);
+			$notificationsCount = $currentMemberObj->notificationsCount();
+			$notifications = $currentMemberObj->getNotifications();
 		}
 		else {
 			$navigation = array_merge($navigation, [

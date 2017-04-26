@@ -2,7 +2,7 @@
 	namespace Basics;
 
 	class Handling {
-		public static function getList($condition = 'TRUE', $type = 'comments', $namespaces = 'Comments', $accessor = 'Message', $offsetLimit = false, $idsOnly = false, $ascending = false, $methodParams = null, ...$instanceParams) {
+		public static function getList($condition = 'TRUE', $type = 'comments', $namespaces = 'Messages', $accessor = 'Message', $offsetLimit = false, $idsOnly = false, $ascending = false, $methodParams = null, ...$instanceParams) {
 			$order = $ascending ? 'ASC' : 'DESC';
 			if ($offsetLimit)
 				$offsetLimit = ' LIMIT ' . $offsetLimit;
@@ -53,19 +53,6 @@
 					return $currentKey;
 			}
 			return false;
-		}
-
-		public static function twoDimSorting($array, $keyName) {
-			$keysArray = [];
-			foreach ($array as $key => $element)
-				$keysArray[$key] = $element[$keyName];
-			arsort($keysArray);
-
-			$tempArray = [];
-			foreach ($keysArray as $key => $element)
-				$tempArray[] = $array[$key];
-
-			return $tempArray;
 		}
 
 		public static function countEntries($table = 'messages', $conditions = 'TRUE') {

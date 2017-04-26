@@ -2,10 +2,6 @@
 	namespace Basics;
 
 	class Strings {
-		public static function ucFirst($string) {
-			return mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string) - 1);
-		}
-
 		public static function lcFirst($string) {
 			return mb_strtolower(mb_substr($string, 0, 1)) . mb_substr($string, 1, mb_strlen($string) - 1);
 		}
@@ -48,29 +44,6 @@
 			return $finalString;
 		}
 
-		public static function itemSearch($string, $correlationArray) {
-			$string = str_split($string);
-
-			foreach ($string as $character) {
-				$expectedKey = array_search($character, $correlationArray, true);
-
-				if ($expectedKey)
-					$correlationArray[$expectedKey] = true;
-				else {
-					unset($correlationArray);
-					$correlationArray = false;
-					break;
-				}
-			}
-
-			if (is_array($correlationArray)) {
-				foreach ($correlationArray as $key => $element)
-					$correlationArray[$key] = (int) $element;
-			}
-
-			return $correlationArray;
-		}
-
 		public static function identifier($maxLength = 11) {
 			$identifier = null;
 			$possibilities = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_';
@@ -78,17 +51,5 @@
 				$identifier .= mb_substr($possibilities, mt_rand(0, mb_strlen($possibilities) - 1), 1);
 
 			return $identifier;
-		}
-
-		public static function plural($word, $quantity) {
-			global $clauses;
-
-			if (((int) $quantity === 1 OR $quantity === false) AND !in_array(mb_strtolower($word), explode(',', mb_strtolower($clauses->get('plural_exceptions')))))
-				$word = mb_substr($word, 0, -1);
-
-			if ($quantity !== false)
-				return $quantity . ' ' . $word;
-			else
-				return $word;
 		}
 	}

@@ -1,5 +1,5 @@
 <?php
-	$messageObj = new Comments\Single($params[2], false);
+	$messageObj = new Messages\Single($params[2], false);
 	$message = $messageObj->getMessage(false, false);
 
 	if (empty($message) OR !$message['edit_cond'])

@@ -21,6 +21,7 @@ cancel				= Annuler
 image				= Image
 members				= Membres
 your_profile		= Votre profil.
+add_friends			= Ajouter votre premier ami
 request_friendship	= Ajouter
 accept				= Accepter
 decline				= Refuser

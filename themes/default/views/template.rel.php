@@ -80,9 +80,16 @@
 
 				<ul class="nav navbar-nav notification pull-right">
 					<li class="dropdown">
-						<a data-toggle="dropdown" href="#null"><i class="fa fa-bell"></i> <?php echo (isset($notificationsCount) AND $notificationsCount > 0 )? '(' . $notificationsCount . ')' : '';?></a>
+						<a data-toggle="dropdown" href="#null"><i class="fa fa-bell"></i><?php if (isset($notificationsCount) AND $notificationsCount > 0) echo ' ' . $notificationsCount;?></a>
 						<ul class="dropdown-menu">
-
+<?php
+							foreach ($notifications as $notificationLoop)
+								echo '<li>
+									<a href="' . $linksDir . 'members/' . $notificationLoop['sender']['slug'] . '/">
+										friend request from ' . $notificationLoop['sender']['nickname'] . '
+									</a>
+								</li>';
+?>
 						</ul>
 					</li>
 				</ul>
@@ -90,9 +97,10 @@
 				<form class="navbar-form navbar-right">
 					<div class="form-group">
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="<?php echo $clauses->get('search_friends_placeholder'); ?>">
+							<input type="text" class="form-control" id="search-box" placeholder="<?php echo $clauses->get('search_friends_placeholder'); ?>">
 							<div class="input-group-btn">
 								<button type="submit" class="btn btn-default" title="<?php echo $clauses->get('search'); ?>"><span class="glyphicon glyphicon-search"></span></button>
+								<div id="display-results"></div>
 							</div>
 						</div>
 					</div>

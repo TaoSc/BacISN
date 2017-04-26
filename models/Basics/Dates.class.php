@@ -2,44 +2,6 @@
 	namespace Basics;
 
 	class Dates {
-		public static function countryDate($date, $language = null) {
-			if ($language === null)
-				global $language;
-
-			if ($language === 'standard')
-				$dateFormat = 'Y-m-d';
-			else
-				$dateFormat = (new Languages($language))->get('date_format');
-
-			$date = \DateTime::createFromFormat('Y-m-d', $date);
-			return $date->format($dateFormat);
-		}
-
-		public static function relativeTime($date, $time) {
-			global $clauses;
-
-			$interval = time() - strtotime($date . ' ' . $time);
-
-			if ($interval < 1)
-				return $clauses->get('soon');
-
-			$units = [
-				12 * 30 * 24 * 60 * 60	=> 'years',
-				30 * 24 * 60 * 60		=> 'months',
-				24 * 60 * 60			=> 'days',
-				60 * 60					=> 'hours',
-				60						=> 'minutes',
-				1						=> 'seconds'];
-
-			foreach ($units as $seconds => $string) {
-				$duration = $interval / $seconds;
-				if ($duration >= 1) {
-					$sentence = Strings::plural($clauses->get($string), round($duration)); // called in 'relative_time'
-					return stripslashes(eval($clauses->getMagic('relative_time')));
-				}
-			}
-		}
-
 		public static function sexyDate($date, $cutDays = false, $today = false) {
 			global $language, $clauses;
 
