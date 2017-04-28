@@ -368,9 +368,13 @@ button {
         bottom: 0;
         background: #dddddd;
     }
-    #message-to-send {
-        width: 80%;
-        margin: 0;
+    input[name="message-to-send"] {
+        width: 80% !important;
+        margin: 0 !important;
+    }
+    button#send {
+        width: 20%;
+        font-size: 13px;
     }
     .chat-message {
         padding-right: 8.5px !important;
@@ -391,7 +395,8 @@ button {
 
 .content-profile-page {
     margin: 1em auto;
-    width: 44.23em;
+    width: 100%;
+    max-width: 44em;
 }
 .card {
     background: #fff;
@@ -516,4 +521,3 @@ font-weight: bold;
 .not_seen {
 background-color:#f2f2f2;
 }
-

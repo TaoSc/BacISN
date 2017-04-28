@@ -52,7 +52,7 @@
 			return $this->member;
 		}
 
-		public function setMember($newNickname, $newFirstName, $newLastName, $newEmail, $newBirthDate, $newPwd, $newType, $newAvatar) {
+		public function setMember($newNickname, $newFirstName, $newLastName, $newEmail, $newBirthDate, $newPwd, $newType, $newAvata, $uploadedFile) {
 			$newNickname = htmlspecialchars($newNickname);
 			$newSlug = \Basics\Strings::slug($newNickname);
 			$newFirstName = htmlspecialchars($newFirstName);
@@ -69,10 +69,52 @@
 			if ($this->member AND Handling::check($newNickname, $newSlug, $newFirstName, $newLastName, $newEmail, $pwdBypass ? '123456' : $newPwd, $nicknameTest, (empty($newBirthDate)) ? '0000-00-01' : $newBirthDate, $namesTest) AND !empty($newType)) {
 				global $siteDir;
 
+				if (empty($newAvatar) OR !$newAvatar = \Medias\Image::create($newAvatar, $newNickname, [[100, 100]])) {
+                    if (!empty($uploadedFile) AND $uploadedFile['size'] < 20971520 AND $uploadedFile['error'] == UPLOAD_ERR_OK AND in_array($uploadedFile['type'], ['image/png', 'image/jpeg'])) {
+                        $uploads_dir = trim($siteDir, '/') . '\images\avatars';
 
-				// Buggy when overwriting the image
-				if (empty($newAvatar) OR !$newAvatar = \Medias\Image::create($newAvatar, $newNickname, [[100, 100]]))
-					$newAvatar = $this->member['avatar_id'];
+                        $tmp_name = $uploadedFile['tmp_name'];
+                        $extension = $uploadedFile['type'] === 'image/png' ? 'png' : 'jpg';
+                        $saltedName = hash('sha256', time());
+                        $name = $saltedName . '.' . $extension;
+                        echo $tmp_name, $uploads_dir . '\\' . $name;
+
+                        if (!$name OR !move_uploaded_file($tmp_name, trim($siteDir, '/') . '\image.png'))
+                            die('Erreur lors de l\'envoi de l\'image');
+die();
+                        $newAvatar = \Medias\Image::create($uploads_dir . '\\' . $name, $newNickname, [[100, 100]]);
+                        crop($uploads_dir . '\\' . $name, $uploads_dir . '\\' . $saltedName, [[100, 100]], $extension);
+                    }
+                    else
+                        die('Vous devez envoyer une image');
+                   if (!empty($uploadedFile)) {
+                        $maxFileSize = 2897152;
+                        $taille = filesize($uploadedFile['tmp_name']);
+                        $extensions = array('.png','.gif','.jpg','.jpeg','.GIF','.PNG','.JPG','.JPEG');
+                        $extension = strrchr($uploadedFile['name'], '.');
+                        if (!in_array($extension, $extensions))
+                        {
+                            $error = '<div>You_have_to_upload_a_file_in_png,_gif,_jpeg_or_jpeg</div>';
+                        }
+                        if ($taille > $maxFileSize) {
+                            $error = '<div>Your_file_is_too_bulky</div>';
+                        }
+                        if (!isset($error)) {
+                            // die('create');
+							print_r($uploadedFile);
+                            move_uploaded_file($uploadedFile['tmp_name'], 'C:\inetpub\wwwroot\lycees\atfchat\images\avatars\\' . $newSlug . $extension);
+							echo $uploadedFile['tmp_name'] . ', ' . 'C:\inetpub\wwwroot\lycees\atfchat\images\avatars\\' . $newSlug . $extension;
+							die('moved');
+							
+                        }
+                        else {
+                            echo $error;
+                        }
+                   }
+
+                    $newAvatar = $this->member['avatar_id'];
+                }
+
 
 				if ($newAvatar == $this->member['avatar_id'] AND $newSlug !== $this->member['slug']) {
 					(new \Medias\Image($this->member['avatar_id']))->setImage($newNickname, $newSlug, null, null); // if the image slug is already taken nothing will change for it, the error is silenced.
@@ -80,13 +122,7 @@
 
 				$request = \Basics\Site::getDB()->prepare('UPDATE members SET nickname = ?, slug = ?, avatar = ?, first_name = ?, last_name = ?, email = ?, birth = ?, password = ?, type_id = ? WHERE id = ?');
 				$request->execute([
-					$newNickname,
-					$newSlug,
-					$newAvatar,
-					$newFirstName,
-					$newLastName,
-					$newEmail,
-					$newBirthDate,
+					$newNickname, $newSlug, $newAvatar, $newFirstName, $newLastName, $newEmail, $newBirthDate,
 					$pwdBypass ? $this->member['password'] : hash('sha256', $newSlug . $newPwd),
 					(int) $newType,
 					$this->member['id']
@@ -96,6 +132,23 @@
 			}
 			else
 				return false;
+		}
+
+		public function notificationsCount() {
+			return \Basics\Handling::countEntries('notifications', 'subject_id = ' . $this->member['id'] . ' AND seen = \'0\'');
+		}
+
+		public function getNotifications() {
+			$request = \Basics\Site::getDB()->prepare('SELECT * FROM notifications WHERE subject_id = ? ORDER BY created_at DESC');
+			$request->execute([$this->member['id']]);
+			$notifications = $request->fetchAll(\PDO::FETCH_ASSOC);
+
+			foreach ($notifications as $key => $notificationLoop) {
+				$notifications[$key]['sender'] = (new Single($notificationLoop['user_id']))->getMember();
+				$notifications[$key]['receiver'] = $this->member;
+			}
+
+			return $notifications;
 		}
 
 		public function getFriendRequests() {
@@ -147,6 +200,12 @@
 				$request = \Basics\Site::getDB()->prepare('INSERT INTO friend_requests (from_u, to_u) VALUES (?, ?)');
 				$request->execute([$this->member['id'], $requestedId]);
 
+				$request = \Basics\Site::getDB()->prepare('INSERT INTO notifications (subject_id, name, user_id) VALUES (:subject_id, :name , :user_id)');
+				$request->execute(['subject_id'=> $requestedId,
+					'name' => 'friend_request_sent',
+					'user_id' => $this->member['id']
+				]);
+
 				return true;
 			}
 			else
@@ -159,6 +218,9 @@
 
 			if ($this->member['type_id'] != 3 AND $requestedMember['type_id'] != 3 AND !$this->befriend($senderId) AND $requestedMemberObj->requestPending($this->member['id'])) {
 				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE from_u = ? AND to_u = ?');
+				$request->execute([$senderId, $this->member['id']]);
+
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM notifications WHERE user_id = ? AND subject_id = ?');
 				$request->execute([$senderId, $this->member['id']]);
 
 				$request = \Basics\Site::getDB()->prepare('INSERT INTO friends (applicant, acceptor) VALUES (?, ?)');
@@ -180,32 +242,17 @@
 			elseif ($this->requestPending($requestedId, true)) {
 				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE (from_u = ? AND to_u = ?) OR (from_u = ? AND to_u = ?)');
 				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
+
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM notifications WHERE (user_id = ? AND subject_id = ?) OR (subject_id = ? AND user_id = ?)');
+				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
 			}
 
 			return true;
 		}
 
-		/*public function deleteMember() {
-			if ($this->member) {
-				$db = \Basics\Site::getDB();
-
-				$this->deleteAvatar();
-
-				$request = $db->prepare('DELETE FROM members WHERE id = ?');
-				$request->execute([$this->member['id']]);
-
-				$request = $db->prepare('DELETE FROM comments WHERE author_id = ?');
-				$request->execute([$this->member['id']]);
-
-				$request = $db->prepare('DELETE FROM votes WHERE author_id = ?');
-				$request->execute([$this->member['id']]);
-
-				return true;
-			}
-			else
-				return false;
-		}
-
+		
+		
+			/*
 		public function deleteAvatar() {
 			if ($this->member) {
 				global $siteDir;

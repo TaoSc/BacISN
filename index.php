@@ -2,6 +2,7 @@
 	// Basic configuration
 	error_reporting(E_ALL);
 	$siteDir = dirname(__FILE__) . '/';
+
 	$configFile = $siteDir . 'config.inc.php';
 	$ajaxCheck = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && mb_strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 	session_start();
@@ -10,11 +11,11 @@
 	// Classes auto-loading
 	spl_autoload_register(function ($class) {
 		global $siteDir;
-
-		if (file_exists($siteDir . 'models/' . $class . '.class.php'))
-			require $siteDir . 'models/' . $class . '.class.php';
-		elseif (file_exists($siteDir . 'models/' . $class . '.php'))
-			require $siteDir . 'models/' . $class . '.php';
+//echo $siteDir . 'models/' .  str_replace('\\', '/', $class) . '.class.php';
+		if (file_exists($siteDir . 'models/' . str_replace('\\', '/', $class) . '.class.php'))
+			require $siteDir . 'models/' . str_replace('\\', '/', $class) . '.class.php';
+		elseif (file_exists($siteDir . 'models/' . str_replace('\\', '/', $class) . '.php'))
+			require $siteDir . 'models/' . str_replace('\\', '/', $class) . '.php';
 	});
 
 	// System installation check
@@ -145,12 +146,15 @@
 
 	elseif ($params[0] === 'members' AND isset($params[3]) AND $params[1] === 'login' AND $params[2] === 'ajax' AND $foldersDepth === 3)
 		include $siteDir . 'controllers/members/login.ajax.php';
-	elseif ($params[0] === 'members' AND isset($params[2]) AND ($params[1] === 'login' OR $params[1] === 'logout') AND $foldersDepth === 2)
+elseif ($params[0] === 'members' AND $params[1] === 'search' AND $foldersDepth === 1)
+		{include $siteDir . 'controllers/members/search.ajax.php';}	
+elseif ($params[0] === 'members' AND isset($params[2]) AND ($params[1] === 'login' OR $params[1] === 'logout') AND $foldersDepth === 2)
 		include $siteDir . 'controllers/members/' . $params[1] . '.php';
-	elseif ($params[0] === 'members' AND isset($params[1]) AND $params[2] === 'index' AND $foldersDepth === 2)
+	elseif ($params[0] === 'members' AND isset($params[1]) AND $foldersDepth === 2 AND $params[2] === 'index')
 		include $siteDir . 'controllers/members/profile.rel.php';
 	elseif ($params[0] === 'members' AND isset($params[1]) AND isset($params[2]) AND $foldersDepth === 2)
 		include $siteDir . 'controllers/members/friendship.rel.php';
+	
 
 	elseif ($params[0] === 'votes' AND isset($params[2]) AND $foldersDepth === 2)
 		include $siteDir . 'controllers/votes/ajax.rel.php';

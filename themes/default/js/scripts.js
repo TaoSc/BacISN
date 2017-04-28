@@ -30,6 +30,25 @@ $(function() {
 		return false;
 	});
 
+	// Friends search
+	var url = linksDir + 'members/search';
+	$('#search-box').on('keyup', function() {
+		var query = $(this).val();
+
+		if (query.length > 0) {
+            $("#display-results").html('test');
+			$.ajax({
+				type: 'POST',
+				url: url,
+				data: {query: query},
+				sucess: function(receivedData) {
+                    alert(receivedData);
+					$("#display-results").html(receivedData).show();
+				}
+			});
+		}
+	});
+
 	// Toggle Sidebar
 	$('.chat-header i.fa-bars').click(function() {
 		$('.people-list').toggleClass('sidebar-visible');
@@ -73,24 +92,52 @@ $(function() {
 		}
 	});
 
+	// Gather Messages
+	/*var url = "tchatAjax.php",
+		memberId = 0,
+		timer = setInterval(getMessages, 5000);
+
+	function getMessages() {
+		$.post(url, {
+				action: "getMessages",
+				memberId: memberId
+			}, function(data) {
+				if (data.error === "ok") {
+					$("#tchat").append(data.result);
+					memberId = data.memberId;
+				} else {
+					alert(data.error);
+				}
+			},
+			"json");
+		return false;
+	};*/
+
 	// Send Input on Enter
 	function sendMessage(id) {
-		var value = $('#message-to-send').val(),
+		var currentChatBox = '.chat[data-id=' + id + ']',
+			value = $(currentChatBox + ' #message-to-send-' + id).val(),
 			postDate = 'Now',
 			messageBlock = '<li class="clearfix"><div class="message-status align-right"><span class="message-data-time">' + postDate + '</span></div><div class="message other-message pull-right">' + value + '</div></li>';
 
-		$('.chat-history ul').append(messageBlock);
-		$('#message-to-send').val('');
+		if (!value)
+			return false;
+
+		$(currentChatBox + ' > .chat-history ul').append(messageBlock);
+		$(currentChatBox + ' #message-to-send-' + id).val('');
+
+		var posting = $.post(linksDir + 'messages/' + id, {
+			'content': value
+		});
+
+		posting.done(function(data) {
+			$(currentChatBox + ' > .chat-history ul').html(data);
+			return false;
+		});
 	}
 
-	$('#message-to-send').keydown(function(event) {
-		if (event.keyCode == 13) {
-			sendMessage(1);
-		}
+	$('.button-send').parent().on('click', '.button-send', function() {
+		sendMessage($(this).parent().parent().attr('data-id'));
+		return false;
 	});
-	$('.chat-message').on('click', '.button-send', function() {
-		sendMessage(1);
-	});
-
-	// $('.button-send').click(function() {});
 });

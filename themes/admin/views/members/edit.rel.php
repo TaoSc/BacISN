@@ -1,4 +1,4 @@
-<form class="form-horizontal col-lg-12 col-xs-no-padding col-xs-no-padding" method="post" action="">
+<form class="form-horizontal col-lg-12 col-xs-no-padding col-xs-no-padding" method="post" action="" enctype="multipart/form-data">
 	<fieldset class="col-lg-offset-1 col-lg-10 col-xs-no-padding col-xs-no-padding">
 		<legend><?php echo $clauses->get('edit_member'); ?></legend>
 
@@ -41,11 +41,12 @@
 			<label class="col-md-4 col-xs-3 control-label" for="img"><?php echo $clauses->get('avatar'); ?></label>
 			<div class="col-md-4 col-xs-9">
 				<input name="img" id="img" type="url" class="form-control" placeholder="<?php echo $clauses->get('img_placeholder'); ?>">
-			</div>
+                <input type="file" name="image" id="image">
+            </div>
 		</div>
 
 		<div class="form-group">
-			<div class="col-md-offset-4 col-xs-offset-3" style="padding-left: 15px;">
+			<div class="col-md-offset-5 col-xs-offset-3" style="padding-left: 15px;">
 				<button class="btn btn-primary"><?php echo $clauses->get('send'); ?></button>
 			</div>
 		</div>
