@@ -40,13 +40,10 @@
 <?php
 					echo $clauses->get('reg_date') . ' : ';
 					Basics\Templates::dateTime($member['registration']['date'], $member['registration']['time']);
-
 					if ($member['name'])
 						echo ' | ' . $clauses->get('name') . ' : ' . $member['name'];
-
 					if ($member['birth'])
 						echo ' | ' . $clauses->get('age') . ' : ' . Basics\Dates::age($member['birth']) . ' ' . $clauses->get('years_old');
-
 					if (!Basics\Site::parameter('private_emails') AND $member['email'])
 						echo ' | ' . $clauses->get('email') . ' : ' . $member['email'];
 ?>

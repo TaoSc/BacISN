@@ -11,6 +11,7 @@
 				FROM comments
 				WHERE id = ?
 			');
+
 			$request->execute([$id]);
 			$this->message = $request->fetch(\PDO::FETCH_ASSOC);
 
@@ -30,9 +31,12 @@
 				$this->message['time'] = \Basics\Dates::sexyTime($this->message['time']);
 				if ($this->message['modif_date'])
 					$this->message['modif_time'] = \Basics\Dates::sexyTime($this->message['modif_time']);
+				// Gère la date d'envoie des messages
 				$this->message['content'] = htmlspecialchars($this->message['content']);
+				// Histoire de sécurité
 				if ($lineJump)
 					$this->message['content'] = nl2br($this->message['content'], false);
+				// Saut de ligne
 
 				$this->message['author'] = (new \Members\Single($this->message['author_id']))->getMember();
 				$this->message['language'] = (new \Basics\Languages($this->message['language'], false))->getLanguage($language);
@@ -40,11 +44,12 @@
 				$this->message['dislikes'] = \Votes\Handling::number($this->message['id'], 'messages', -1);
 				$this->message['popularity'] = $this->message['likes'] - $this->message['dislikes'];
 			}
-
+			// Renvoie les données nécéssaires à l'affichage
 			return $this->message;
 		}
 
 		public function setMessage($content, $hidden = false) {
+			return false;
 			if ($this->message AND !empty($content) AND !empty($content) AND $this->message['edit_cond']) {
 				$hidden = (int) $hidden;
 
@@ -69,7 +74,7 @@
 					$request = $db->prepare('UPDATE comments SET hidden = 2 WHERE id = ?');
 					$request->execute([$this->message['id'], $this->message['id']]);
 				}
-
+				// Permet de supprimer un message envoyé
 				return true;
 			}
 			else
@@ -77,6 +82,7 @@
 		}
 
 		public static function create($receiverId, $content) {
+
 			global $currentMemberId;
 
 			if ($currentMemberId AND $currentMemberId != $receiverId AND !empty($content) AND (new \Members\Single($receiverId))->befriend($currentMemberId)) {

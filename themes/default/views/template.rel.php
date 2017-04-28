@@ -83,7 +83,9 @@
 						<a data-toggle="dropdown" href="#null"><i class="fa fa-bell"></i><?php if (isset($notificationsCount) AND $notificationsCount > 0) echo ' ' . $notificationsCount;?></a>
 						<ul class="dropdown-menu">
 <?php
-							foreach ($notifications as $notificationLoop)
+                            if (empty($notifications))
+                                echo $clauses->get('you_do_not_have_any_notification');
+                                foreach ($notifications as $notificationLoop)
 								echo '<li>
 									<a href="' . $linksDir . 'members/' . $notificationLoop['sender']['slug'] . '/">
 										friend request from ' . $notificationLoop['sender']['nickname'] . '
