@@ -8,7 +8,7 @@
 		if ($memberObj->setMember($_POST['nickname'], $_POST['first_name'], $_POST['last_name'], $member['email'], $_POST['birth'], $_POST['password'], $member['type_id'], $_POST['img'], $_FILES['image'])) {
 			if ($currentMemberId == $member['id'])
 				Basics\site::session('member', '');
-die();
+
 			header('Refresh: 0');
 		}
 		else

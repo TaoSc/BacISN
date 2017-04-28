@@ -18,7 +18,7 @@
     <div class="message<?php if ($currentMemberId == $message['author']['id']) echo ' other-message pull-right'; else echo ' my-message'; ?>">
         <div class="btn-group btn-group-xs pull-right">
 <?php
-			
+
 			if ($hasVoted AND $currentMemberId AND !$message['hidden'])
 				echo '<button type="button" class="btn btn-inverse vote-btn" data-id="' . $message['id'] . '" data-type="messages" value="strip">' . $clauses->get('remove_vote') . '</button>';
 ?>

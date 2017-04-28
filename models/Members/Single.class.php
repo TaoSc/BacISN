@@ -52,7 +52,7 @@
 			return $this->member;
 		}
 
-		public function setMember($newNickname, $newFirstName, $newLastName, $newEmail, $newBirthDate, $newPwd, $newType, $newAvata, $uploadedFile) {
+		public function setMember($newNickname, $newFirstName, $newLastName, $newEmail, $newBirthDate, $newPwd, $newType, $newAvatar, $uploadedFile) {
 			$newNickname = htmlspecialchars($newNickname);
 			$newSlug = \Basics\Strings::slug($newNickname);
 			$newFirstName = htmlspecialchars($newFirstName);
@@ -70,8 +70,10 @@
 				global $siteDir;
 
 				if (empty($newAvatar) OR !$newAvatar = \Medias\Image::create($newAvatar, $newNickname, [[100, 100]])) {
-                    if (!empty($uploadedFile) AND $uploadedFile['size'] < 20971520 AND $uploadedFile['error'] == UPLOAD_ERR_OK AND in_array($uploadedFile['type'], ['image/png', 'image/jpeg'])) {
-                        $uploads_dir = trim($siteDir, '/') . '\images\avatars';
+
+
+					if (!empty($uploadedFile) AND $uploadedFile['size'] < 20971520 AND $uploadedFile['error'] == UPLOAD_ERR_OK AND in_array($uploadedFile['type'], ['image/png', 'image/jpeg'])) {
+						$uploads_dir = trim($siteDir, '/') . '\images\avatars';
 
                         $tmp_name = $uploadedFile['tmp_name'];
                         $extension = $uploadedFile['type'] === 'image/png' ? 'png' : 'jpg';
@@ -81,14 +83,14 @@
 
                         if (!$name OR !move_uploaded_file($tmp_name, trim($siteDir, '/') . '\image.png'))
                             die('Erreur lors de l\'envoi de l\'image');
-die();
+						die();
                         $newAvatar = \Medias\Image::create($uploads_dir . '\\' . $name, $newNickname, [[100, 100]]);
                         crop($uploads_dir . '\\' . $name, $uploads_dir . '\\' . $saltedName, [[100, 100]], $extension);
                     }
                     else
                         die('Vous devez envoyer une image');
-                   if (!empty($uploadedFile)) {
-                        $maxFileSize = 2897152;
+					if (!empty($uploadedFile)) {
+						$maxFileSize = 2897152;
                         $taille = filesize($uploadedFile['tmp_name']);
                         $extensions = array('.png','.gif','.jpg','.jpeg','.GIF','.PNG','.JPG','.JPEG');
                         $extension = strrchr($uploadedFile['name'], '.');
@@ -105,20 +107,21 @@ die();
                             move_uploaded_file($uploadedFile['tmp_name'], 'C:\inetpub\wwwroot\lycees\atfchat\images\avatars\\' . $newSlug . $extension);
 							echo $uploadedFile['tmp_name'] . ', ' . 'C:\inetpub\wwwroot\lycees\atfchat\images\avatars\\' . $newSlug . $extension;
 							die('moved');
-							
+
                         }
                         else {
                             echo $error;
                         }
-                   }
+					}
+
 
                     $newAvatar = $this->member['avatar_id'];
                 }
 
-
 				if ($newAvatar == $this->member['avatar_id'] AND $newSlug !== $this->member['slug']) {
 					(new \Medias\Image($this->member['avatar_id']))->setImage($newNickname, $newSlug, null, null); // if the image slug is already taken nothing will change for it, the error is silenced.
 				}
+
 
 				$request = \Basics\Site::getDB()->prepare('UPDATE members SET nickname = ?, slug = ?, avatar = ?, first_name = ?, last_name = ?, email = ?, birth = ?, password = ?, type_id = ? WHERE id = ?');
 				$request->execute([
@@ -250,8 +253,8 @@ die();
 			return true;
 		}
 
-		
-		
+
+
 			/*
 		public function deleteAvatar() {
 			if ($this->member) {

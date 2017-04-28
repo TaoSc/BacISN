@@ -31,19 +31,18 @@ $(function() {
 	});
 
 	// Friends search
-	var url = linksDir + 'members/search';
 	$('#search-box').on('keyup', function() {
-		var query = $(this).val();
+		var query = $(this).val(),
+			url = linksDir + 'members/search';
 
 		if (query.length > 0) {
-            $("#display-results").html('test');
 			$.ajax({
 				type: 'POST',
 				url: url,
 				data: {query: query},
-				sucess: function(receivedData) {
-                    alert(receivedData);
-					$("#display-results").html(receivedData).show();
+				dataType: 'html',
+				success: function(data) {
+					$("#display-results").html(data).show();
 				}
 			});
 		}
