@@ -2,7 +2,7 @@
 	namespace Basics;
 
 	class Handling {
-		public static function getList($condition = 'TRUE', $type = 'comments', $namespaces = 'Messages', $accessor = 'Message', $offsetLimit = false, $idsOnly = false, $ascending = false, $methodParams = null, ...$instanceParams) {
+		public static function getList($condition = 'TRUE', $type = 'messages', $namespaces = 'Messages', $accessor = 'Message', $offsetLimit = false, $idsOnly = false, $ascending = false, $methodParams = null, ...$instanceParams) {
 			$order = $ascending ? 'ASC' : 'DESC';
 			if ($offsetLimit)
 				$offsetLimit = ' LIMIT ' . $offsetLimit;

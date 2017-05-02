@@ -102,6 +102,7 @@ button {
     background: #444753;
     border-radius: 1rem;
     padding: 0;
+	margin-bottom: 1em;
 }
 #chat-wrapper ul {
     list-style-type: none;
@@ -356,10 +357,18 @@ button {
         width: auto;
         z-index: 1000;
         transition: 0.3s ease;
+		height: inherit;
+		width: 50%;
     }
+	.people-list input {
+	    padding-left: 2.5em;
+	}
     .container-fluid .chat {
         width: 100%;
     }
+	.chat {
+		height: inherit;
+	}
     .chat .chat-message {
         padding: 15px;
         position: fixed;
@@ -520,4 +529,33 @@ font-weight: bold;
 }
 .not_seen {
 background-color:#f2f2f2;
+}
+
+
+#display-results {
+	width: 225px;
+	position: fixed;
+	display: none;
+    margin-left: -190px;
+}
+#display-results img {
+    width: 3em;
+    height: 3em;
+    margin-right: 1em;
+}
+
+.display-box-user {
+	padding: 1rem;
+	border-top: 1px solid #dedede;
+	height: 60px;
+	font-size: 12px;
+	background-color: white;
+	position: relative;
+}
+
+.display-box-user a {
+	color: rgba(0, 0, 0, 0.75) !important;
+}
+.display-box-user a:hover {
+	background-color: transparent !important;
 }

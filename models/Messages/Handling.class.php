@@ -5,7 +5,7 @@
 		public static function getMessages($condition = 'TRUE', $languageCheck = false, $hidden = true, $ascending = true, $offsetLimit = false, $idsOnly = false, $lineJump = true) {
 			global $language;
 
-			return \Basics\Handling::getList($condition, 'comments', 'Messages', 'Message', $offsetLimit, $idsOnly, $ascending, $lineJump);
+			return \Basics\Handling::getList($condition, 'messages', 'Messages', 'Message', $offsetLimit, $idsOnly, $ascending, $lineJump);
 		}
 
 		public static function view($receiverId, $languageCheck = false, $hidden = true) {
@@ -18,7 +18,7 @@
 			if ($hidden)
 				$advancedCondition .= ' AND hidden < 2';
 
-			$messagesNbr = \Basics\Handling::countEntries('comments', $basicCondition . $advancedCondition);
+			$messagesNbr = \Basics\Handling::countEntries('messages', $basicCondition . $advancedCondition);
 
 			$messages = self::getMessages($basicCondition . $advancedCondition, $languageCheck, $hidden);
 

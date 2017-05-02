@@ -35,7 +35,7 @@
 			return $dir . 'images/' . $slug . '-' . $width . 'x' . $height .  '.' . $extension;
 		}
 
-		public static function comment($message, $messagesTemplate = false) {
+		public static function message($message, $messagesTemplate = false) {
 			global $siteDir, $linksDir, $language, $clauses, $currentMemberId, $theme;
 
 			$hasVoted = \Votes\Handling::did($message['id'], 'messages');

@@ -2,13 +2,15 @@
 	namespace Messages;
 
 	class Single {
+
 		protected $message;
+        protected $key;
 
 		public function __construct($id) {
-			$request = \Basics\Site::getDB()->prepare('
+            $request = Site::getDB()->prepare('
 				SELECT id, author_id, receiver_id, hidden, content, language, DATE(post_date) date, TIME(post_date) time,
 				DATE(modif_date) modif_date, TIME(modif_date) modif_time
-				FROM comments
+				FROM messages
 				WHERE id = ?
 			');
 
@@ -28,10 +30,24 @@
 			if ($this->message AND $parsing) {
 				global $language;
 
-				$this->message['time'] = \Basics\Dates::sexyTime($this->message['time']);
+				$this->message['time'] = Dates::sexyTime($this->message['time']);
 				if ($this->message['modif_date'])
-					$this->message['modif_time'] = \Basics\Dates::sexyTime($this->message['modif_time']);
+					$this->message['modif_time'] = Dates::sexyTime($this->message['modif_time']);
 				// Gère la date d'envoie des messages
+                $data = base64_decode($this->message['content']);
+                $iv = substr($data, 0, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
+
+                $this->message['content'] = rtrim(
+                    mcrypt_decrypt(
+                        MCRYPT_RIJNDAEL_128,
+                        hash('sha256', Site::getSecret(), true),
+                        substr($data, mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC)),
+                        MCRYPT_MODE_CBC,
+                        $iv
+                    ),
+                    "\0"
+                );
+
 				$this->message['content'] = htmlspecialchars($this->message['content']);
 				// Histoire de sécurité
 				if ($lineJump)
@@ -49,11 +65,10 @@
 		}
 
 		public function setMessage($content, $hidden = false) {
-			return false;
 			if ($this->message AND !empty($content) AND !empty($content) AND $this->message['edit_cond']) {
 				$hidden = (int) $hidden;
 
-				$request = \Basics\Site::getDB()->prepare('UPDATE comments SET content = ?, hidden = ?, modif_date = NOW() WHERE id = ?');
+				$request = Site::getDB()->prepare('UPDATE messages SET content = ?, hidden = ?, modif_date = NOW() WHERE id = ?');
 				$request->execute([$content, $hidden, $this->message['id']]);
 
 				return true;
@@ -67,11 +82,11 @@
 				$db = \Basics\Site::getDB();
 
 				if ($realRemoval) {
-					$request = $db->prepare('DELETE FROM comments WHERE id = ?');
+					$request = $db->prepare('DELETE FROM messages WHERE id = ?');
 					$request->execute([$this->message['id']]);
 				}
 				else {
-					$request = $db->prepare('UPDATE comments SET hidden = 2 WHERE id = ?');
+					$request = $db->prepare('UPDATE messages SET hidden = 2 WHERE id = ?');
 					$request->execute([$this->message['id'], $this->message['id']]);
 				}
 				// Permet de supprimer un message envoyé
@@ -88,7 +103,18 @@
 			if ($currentMemberId AND $currentMemberId != $receiverId AND !empty($content) AND (new \Members\Single($receiverId))->befriend($currentMemberId)) {
 				global $language;
 
-				$request = \Basics\Site::getDB()->prepare('INSERT INTO comments (author_id, ip, receiver_id, hidden, content, language, post_date) VALUES (?, ?, ?, 0, ?, ?, NOW())');
+
+                $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC), MCRYPT_DEV_URANDOM);
+                $content = base64_encode($iv . mcrypt_encrypt(
+                        MCRYPT_RIJNDAEL_128,
+                        hash('sha256', Site::getSecret(), true),
+                        $content,
+                        MCRYPT_MODE_CBC,
+                        $iv
+                    )
+                );
+
+				$request = \Basics\Site::getDB()->prepare('INSERT INTO messages (author_id, ip, receiver_id, hidden, content, language, post_date) VALUES (?, ?, ?, 0, ?, ?, NOW())');
 				$request->execute([$currentMemberId, \Basics\Handling::ipAddress(), $receiverId, $content, $language]);
 
 				return true;

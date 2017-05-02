@@ -51,4 +51,9 @@
 			else
 				$_SESSION[Strings::slug($siteName) . '_' . $name] = $newValue;
 		}
+
+		public static function getSecret() {
+		    return 'Secret';
+        }
+
 	}
