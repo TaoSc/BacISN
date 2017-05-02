@@ -253,9 +253,7 @@
 			return true;
 		}
 
-
-
-			/*
+		/*
 		public function deleteAvatar() {
 			if ($this->member) {
 				global $siteDir;
@@ -269,5 +267,6 @@
 			}
 			else
 				return false;
-		}*/
+		}
+		*/
 	}

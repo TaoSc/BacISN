@@ -55,9 +55,7 @@ $(function() {
 
 	// Search for the Left Sidebar
 	var searchFilter = {
-		options: {
-			valueNames: ['name']
-		},
+		options: {valueNames: ['name']},
 		init: function() {
 			var userList = new List('people-list', this.options);
 			var noItems = $('<li id="no-items-found">No items found</li>');
@@ -137,6 +135,5 @@ $(function() {
 
 	$('.button-send').parent().on('click', '.button-send', function() {
 		sendMessage($(this).parent().parent().attr('data-id'));
-		return false;
 	});
 });
