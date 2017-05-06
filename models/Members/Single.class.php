@@ -5,6 +5,7 @@
 		private $member;
 
 		public function __construct($id) {
+			// Récupère les données de la base de données
 			$request = \Basics\Site::getDB()->prepare('
 				SELECT id, type_id, nickname, slug, first_name, last_name, email, password, avatar avatar_id, DATE(registration) reg_date, TIME(registration) reg_time, birth
 				FROM members
@@ -17,6 +18,8 @@
 				global $currentMemberId, $rights;
 
 				$this->member['id'] = (int) $this->member['id'];
+
+				// Conditions autorisant la modification et la suppression du membre
 				$this->member['edit_cond'] = ($currentMemberId AND (($currentMemberId === $this->member['id'] AND $this->member['type_id'] != 3) OR ($rights['admin_access'] AND $rights['config_edit'])));
 				$this->member['removal_cond'] = $this->member['edit_cond'] AND $this->member['type_id'] != 3;
 			}
@@ -24,7 +27,7 @@
 
 		public function getMember() {
 			if ($this->member) {
-				// password is salted (slug + pass)
+				// On formatte les données pour les rendre plus jolies pour l'affichage
 				global $clauses;
 
 				if ($this->member['first_name'])
@@ -45,7 +48,8 @@
 					$this->member['birth'] = $this->member['birth'];
 				}
 				$this->member['registration']['date'] = $this->member['reg_date'];
-				$this->member['registration']['time'] = \Basics\Dates::sexyTime($this->member['reg_time']);
+				$this->member['registration']['time'] = \Basics\Dates::formattedTime($this->member['reg_time']);
+
 				$this->member['type'] = (new Type($this->member['type_id']))->getType();
 			}
 
@@ -53,6 +57,7 @@
 		}
 
 		public function setMember($newNickname, $newFirstName, $newLastName, $newEmail, $newBirthDate, $newPwd, $newType, $newAvatar, $uploadedFile) {
+			// On échappe les données entrées par le membre
 			$newNickname = htmlspecialchars($newNickname);
 			$newSlug = \Basics\Strings::slug($newNickname);
 			$newFirstName = htmlspecialchars($newFirstName);
@@ -66,11 +71,158 @@
 			$nicknameTest = $newNickname !== $this->member['nickname'];
 			$namesTest = (!empty($newFirstName) OR !empty($newLastName));
 
+			// Effectue toutes les vérifications nécessaires
 			if ($this->member AND Handling::check($newNickname, $newSlug, $newFirstName, $newLastName, $newEmail, $pwdBypass ? '123456' : $newPwd, $nicknameTest, (empty($newBirthDate)) ? '0000-00-01' : $newBirthDate, $namesTest) AND !empty($newType)) {
 				global $siteDir;
 
-				if (empty($newAvatar) OR !$newAvatar = \Medias\Image::create($newAvatar, $newNickname, [[100, 100]])) {
+				// LE CODE POUR LA PHOTO DE PROFIL N'EST PAS PRÊT
+				$newAvatar = $this->member['avatar_id'];
 
+				// Met à jour les données dans la base de données
+				$request = \Basics\Site::getDB()->prepare('UPDATE members SET nickname = ?, slug = ?, avatar = ?, first_name = ?, last_name = ?, email = ?, birth = ?, password = ?, type_id = ? WHERE id = ?');
+				$request->execute([
+					$newNickname, $newSlug, $newAvatar, $newFirstName, $newLastName, $newEmail, $newBirthDate,
+					// Le mot de passe est hachée (slug + pass)
+					$pwdBypass ? $this->member['password'] : hash('sha256', $newSlug . $newPwd),
+					(int) $newType, $this->member['id']
+				]);
+
+				return true;
+			}
+			else
+				return false;
+		}
+
+		// Retourne le nombre de notifications non lues du membre
+		public function notificationsCount() {
+			return \Basics\Handling::countEntries('notifications', 'subject_id = ' . $this->member['id'] . ' AND seen = \'0\'');
+		}
+
+		// Récupère lesdites notifications
+		public function getNotifications() {
+			$request = \Basics\Site::getDB()->prepare('SELECT * FROM notifications WHERE subject_id = ? ORDER BY created_at DESC');
+			$request->execute([$this->member['id']]);
+			$notifications = $request->fetchAll(\PDO::FETCH_ASSOC);
+
+			foreach ($notifications as $key => $notificationLoop) {
+				$notifications[$key]['sender'] = (new Single($notificationLoop['user_id']))->getMember();
+				$notifications[$key]['receiver'] = $this->member;
+			}
+
+			return $notifications;
+		}
+
+		public function getFriendRequests() {
+			return \Basics\Handling::getList('to_u = ' . $this->member['id'], 'friend_requests', 'Members', 'Member', false, false, true);
+		}
+
+		public function getFriends() {
+			$friendsList = [];
+
+			// Récupère les amis qui nous ont ajouté
+			$request = \Basics\Site::getDB()->query('SELECT applicant id FROM friends WHERE acceptor = ' . $this->member['id'] . ' ORDER BY id ASC');
+			$ids = $request->fetchAll(\PDO::FETCH_ASSOC);
+
+			foreach ($ids as $member)
+				$friendsList[] = (new Single($member['id']))->getMember();
+
+			// Récupère les amis qu'on a ajouté
+			$request = \Basics\Site::getDB()->query('SELECT acceptor id FROM friends WHERE applicant = ' . $this->member['id'] . ' ORDER BY id ASC');
+			$ids = $request->fetchAll(\PDO::FETCH_ASSOC);
+
+			foreach ($ids as $member)
+				$friendsList[] = (new Single($member['id']))->getMember();
+
+
+			return array_values(array_filter($friendsList));
+		}
+
+		// Return si oui ou non on est amis avec un autre membre
+		public function befriend($requestedId) {
+			if ($requestedId == $this->member['id'])
+				return true;
+			return \Basics\Handling::countEntries('friends', '(applicant = ' . $this->member['id'] . ' AND acceptor = ' . $requestedId . ') OR (applicant = ' . $requestedId . ' AND acceptor = ' . $this->member['id'] . ')');
+		}
+
+		// Retourne s'il y a demande d'amis en attente avec un autre membre
+		public function requestPending($requestedId, $bothWays = false) {
+			if ($requestedId == $this->member['id'])
+				return false;
+
+			// Si bothWays vaut true, la fonction retourne une possible demande des "deux côtés"
+			if ($bothWays)
+				$condition = '(from_u = ' . $this->member['id'] . ' AND to_u = ' . $requestedId . ') OR (from_u = ' . $requestedId . ' AND to_u = ' . $this->member['id'] . ')';
+			// Sinon retourne uniquement le nombre de demandes venant de l'utilisateur
+			else
+				$condition = '(from_u = ' . $this->member['id'] . ' AND to_u = ' . $requestedId . ')';
+
+			return \Basics\Handling::countEntries('friend_requests', $condition);
+		}
+
+		public function sendFriendRequest($requestedId) {
+			$requestedMember = (new Single($requestedId))->getMember();
+
+			// Si aucun des deux membres n'est pas bannis et qu'ils ne sont pas déjà amis et qu'il n'y a pas de requête en attente
+			if ($this->member['type_id'] != 3 AND $requestedMember['type_id'] != 3 AND !$this->befriend($requestedId) AND !$this->requestPending($requestedId, true)) {
+				$request = \Basics\Site::getDB()->prepare('INSERT INTO friend_requests (from_u, to_u) VALUES (?, ?)');
+				$request->execute([$this->member['id'], $requestedId]);
+
+				$request = \Basics\Site::getDB()->prepare('INSERT INTO notifications (subject_id, name, user_id) VALUES (:subject_id, :name , :user_id)');
+				$request->execute(['subject_id'=> $requestedId,
+					'name' => 'friend_request_sent',
+					'user_id' => $this->member['id']
+				]);
+
+				return true;
+			}
+			else
+				return false;
+		}
+
+		public function acceptFriendRequest($senderId) {
+			$requestedMemberObj = new Single($senderId);
+			$requestedMember = $requestedMemberObj->getMember();
+
+			// Si aucun des deux membres n'est pas bannis et qu'ils ne sont pas déjà amis et qu'il y a une requête en attente
+			if ($this->member['type_id'] != 3 AND $requestedMember['type_id'] != 3 AND !$this->befriend($senderId) AND $requestedMemberObj->requestPending($this->member['id'])) {
+				// Supprime la demande
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE from_u = ? AND to_u = ?');
+				$request->execute([$senderId, $this->member['id']]);
+
+				// Supprime la notification
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM notifications WHERE user_id = ? AND subject_id = ?');
+				$request->execute([$senderId, $this->member['id']]);
+
+				// Ajoute en tant qu'ami
+				$request = \Basics\Site::getDB()->prepare('INSERT INTO friends (applicant, acceptor) VALUES (?, ?)');
+				$request->execute([$senderId, $this->member['id']]);
+
+				return true;
+			}
+			else
+				return false;
+		}
+
+		public function cancelFriendRequest($requestedId) {
+			// Supprime de la liste d'amis si déjà amis
+			if ($this->befriend($requestedId)) {
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM friends WHERE (applicant = ? AND acceptor = ?) OR (applicant = ? AND acceptor = ?)');
+				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
+			}
+			// Supprime la demande et la notification associée sinon
+			elseif ($this->requestPending($requestedId, true)) {
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE (from_u = ? AND to_u = ?) OR (from_u = ? AND to_u = ?)');
+				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
+
+				$request = \Basics\Site::getDB()->prepare('DELETE FROM notifications WHERE (user_id = ? AND subject_id = ?) OR (subject_id = ? AND user_id = ?)');
+				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
+			}
+
+			return true;
+		}
+	}
+
+				/*if (empty($newAvatar) OR !$newAvatar = \Medias\Image::create($newAvatar, $newNickname, [[100, 100]])) {
 
 					if (!empty($uploadedFile) AND $uploadedFile['size'] < 20971520 AND $uploadedFile['error'] == UPLOAD_ERR_OK AND in_array($uploadedFile['type'], ['image/png', 'image/jpeg'])) {
 						$uploads_dir = trim($siteDir, '/') . '\images\avatars';
@@ -114,144 +266,12 @@
                         }
 					}
 
-
                     $newAvatar = $this->member['avatar_id'];
                 }
 
 				if ($newAvatar == $this->member['avatar_id'] AND $newSlug !== $this->member['slug']) {
-					(new \Medias\Image($this->member['avatar_id']))->setImage($newNickname, $newSlug, null, null); // if the image slug is already taken nothing will change for it, the error is silenced.
-				}
-
-
-				$request = \Basics\Site::getDB()->prepare('UPDATE members SET nickname = ?, slug = ?, avatar = ?, first_name = ?, last_name = ?, email = ?, birth = ?, password = ?, type_id = ? WHERE id = ?');
-				$request->execute([
-					$newNickname, $newSlug, $newAvatar, $newFirstName, $newLastName, $newEmail, $newBirthDate,
-					$pwdBypass ? $this->member['password'] : hash('sha256', $newSlug . $newPwd),
-					(int) $newType,
-					$this->member['id']
-				]);
-
-				return true;
-			}
-			else
-				return false;
-		}
-
-		public function notificationsCount() {
-			return \Basics\Handling::countEntries('notifications', 'subject_id = ' . $this->member['id'] . ' AND seen = \'0\'');
-		}
-
-		public function getNotifications() {
-			$request = \Basics\Site::getDB()->prepare('SELECT * FROM notifications WHERE subject_id = ? ORDER BY created_at DESC');
-			$request->execute([$this->member['id']]);
-			$notifications = $request->fetchAll(\PDO::FETCH_ASSOC);
-
-			foreach ($notifications as $key => $notificationLoop) {
-				$notifications[$key]['sender'] = (new Single($notificationLoop['user_id']))->getMember();
-				$notifications[$key]['receiver'] = $this->member;
-			}
-
-			return $notifications;
-		}
-
-		public function getFriendRequests() {
-			return \Basics\Handling::getList('to_u = ' . $this->member['id'], 'friend_requests', 'Members', 'Member', false, false, true);
-		}
-
-		public function getFriends() {
-			$friendsList = [];
-
-
-			$request = \Basics\Site::getDB()->query('SELECT applicant id FROM friends WHERE acceptor = ' . $this->member['id'] . ' ORDER BY id ASC');
-			$ids = $request->fetchAll(\PDO::FETCH_ASSOC);
-
-			foreach ($ids as $member)
-				$friendsList[] = (new Single($member['id']))->getMember();
-
-
-			$request = \Basics\Site::getDB()->query('SELECT acceptor id FROM friends WHERE applicant = ' . $this->member['id'] . ' ORDER BY id ASC');
-			$ids = $request->fetchAll(\PDO::FETCH_ASSOC);
-
-			foreach ($ids as $member)
-				$friendsList[] = (new Single($member['id']))->getMember();
-
-			return array_values(array_filter($friendsList));
-		}
-
-		public function befriend($requestedId) {
-			if ($requestedId == $this->member['id'])
-				return true;
-			return \Basics\Handling::countEntries('friends', '(applicant = ' . $this->member['id'] . ' AND acceptor = ' . $requestedId . ') OR (applicant = ' . $requestedId . ' AND acceptor = ' . $this->member['id'] . ')');
-		}
-
-		public function requestPending($requestedId, $bothWays = false) {
-			if ($requestedId == $this->member['id'])
-				return false;
-
-			if ($bothWays)
-				$condition = '(from_u = ' . $this->member['id'] . ' AND to_u = ' . $requestedId . ') OR (from_u = ' . $requestedId . ' AND to_u = ' . $this->member['id'] . ')';
-			else
-				$condition = '(from_u = ' . $this->member['id'] . ' AND to_u = ' . $requestedId . ')';
-
-			return \Basics\Handling::countEntries('friend_requests', $condition);
-		}
-
-		public function sendFriendRequest($requestedId) {
-			$requestedMember = (new Single($requestedId))->getMember();
-
-			if ($this->member['type_id'] != 3 AND $requestedMember['type_id'] != 3 AND !$this->befriend($requestedId) AND !$this->requestPending($requestedId, true)) {
-				$request = \Basics\Site::getDB()->prepare('INSERT INTO friend_requests (from_u, to_u) VALUES (?, ?)');
-				$request->execute([$this->member['id'], $requestedId]);
-
-				$request = \Basics\Site::getDB()->prepare('INSERT INTO notifications (subject_id, name, user_id) VALUES (:subject_id, :name , :user_id)');
-				$request->execute(['subject_id'=> $requestedId,
-					'name' => 'friend_request_sent',
-					'user_id' => $this->member['id']
-				]);
-
-				return true;
-			}
-			else
-				return false;
-		}
-
-		public function acceptFriendRequest($senderId) {
-			$requestedMemberObj = new Single($senderId);
-			$requestedMember = $requestedMemberObj->getMember();
-
-			if ($this->member['type_id'] != 3 AND $requestedMember['type_id'] != 3 AND !$this->befriend($senderId) AND $requestedMemberObj->requestPending($this->member['id'])) {
-				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE from_u = ? AND to_u = ?');
-				$request->execute([$senderId, $this->member['id']]);
-
-				$request = \Basics\Site::getDB()->prepare('DELETE FROM notifications WHERE user_id = ? AND subject_id = ?');
-				$request->execute([$senderId, $this->member['id']]);
-
-				$request = \Basics\Site::getDB()->prepare('INSERT INTO friends (applicant, acceptor) VALUES (?, ?)');
-				$request->execute([$senderId, $this->member['id']]);
-
-				return true;
-			}
-			else
-				return false;
-		}
-
-		public function cancelFriendRequest($requestedId) {
-			$requestedMember = (new Single($requestedId))->getMember();
-
-			if ($this->befriend($requestedId)) {
-				$request = \Basics\Site::getDB()->prepare('DELETE FROM friends WHERE (applicant = ? AND acceptor = ?) OR (applicant = ? AND acceptor = ?)');
-				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
-			}
-			elseif ($this->requestPending($requestedId, true)) {
-				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE (from_u = ? AND to_u = ?) OR (from_u = ? AND to_u = ?)');
-				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
-
-				$request = \Basics\Site::getDB()->prepare('DELETE FROM notifications WHERE (user_id = ? AND subject_id = ?) OR (subject_id = ? AND user_id = ?)');
-				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
-			}
-
-			return true;
-		}
+					(new \Medias\Image($this->member['avatar_id']))->setImage($newNickname, $newSlug, null, null); // Si le slug est déjà pris, rien ne change. Pas d'erreur levée
+				}*/
 
 		/*
 		public function deleteAvatar() {
@@ -269,4 +289,3 @@
 				return false;
 		}
 		*/
-	}

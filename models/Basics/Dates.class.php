@@ -2,7 +2,7 @@
 	namespace Basics;
 
 	class Dates {
-		public static function sexyDate($date, $cutDays = false, $today = false) {
+		public static function formattedDate($date, $cutDays = false, $today = false) {
 			global $language, $clauses;
 
 			if ($today AND $date === (new \DateTime)->format('Y-m-d'))
@@ -35,9 +35,8 @@
 			return 'th';
 		}
 
-		public static function sexyTime($date) {
+		public static function formattedTime($date) {
 			global $clauses;
-
 			return (new \DateTime($date))->format($clauses->get('time_format'));
 		}
 

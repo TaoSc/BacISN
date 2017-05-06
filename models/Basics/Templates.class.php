@@ -19,7 +19,7 @@
 		public static function dateTime($date, $time) {
 			global $clauses;
 
-			echo Dates::sexyDate($date, true, true) . ' ' . $clauses->get('at') . ' ' . Dates::sexyTime($date . ' ' . $time);
+			echo Dates::formattedDate($date, true, true) . ' ' . $clauses->get('at') . ' ' . Dates::formattedTime($date . ' ' . $time);
 		}
 
 		public static function getImg($slug, $extension, $width, $height, $relativeLoc = true) {

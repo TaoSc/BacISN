@@ -24,7 +24,7 @@
 
 		public function getImage() {
 			if ($this->image)
-				$this->image['time'] = \Basics\Dates::sexyTime($this->image['time']);
+				$this->image['time'] = \Basics\Dates::formattedTime($this->image['time']);
 
 			return $this->image;
 		}

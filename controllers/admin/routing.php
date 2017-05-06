@@ -16,8 +16,6 @@
 	elseif ($rights['admin_access'] AND isset($params[3]) AND $params[1] === 'members-types' AND is_numeric($params[2]) AND $params[3] === 'delete' AND $foldersDepth === 3)
 		include $siteDir . 'controllers/admin/members-types/delete.rel.php';
 
-	elseif ($currentMemberId AND isset($params[2]) AND $params[1] === 'messages' AND is_numeric($params[2]) AND $foldersDepth === 2)
-		include $siteDir . 'controllers/admin/messages/edit.rel.php';
 	elseif ($currentMemberId AND isset($params[3]) AND $params[1] === 'messages' AND is_numeric($params[2]) AND $params[3] === 'delete' AND $foldersDepth === 3)
 		include $siteDir . 'controllers/admin/messages/delete.rel.php';
 
