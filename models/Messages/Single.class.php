@@ -54,7 +54,7 @@
                     "\0"
                 );
 
-				// Histoire de sécurité
+				// On parse le contenu du message
 				$this->message['content'] = htmlspecialchars($this->message['content']);
 
 				// Saut de ligne
@@ -112,7 +112,7 @@
                 $content = base64_encode($iv . mcrypt_encrypt(
                         MCRYPT_RIJNDAEL_128,
                         hash('sha256', Site::getSecret(), true),
-                        $content,
+                        htmlspecialchars($content),
                         MCRYPT_MODE_CBC,
                         $iv
                     )

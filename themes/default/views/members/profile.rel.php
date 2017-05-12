@@ -18,7 +18,7 @@
 							 '<a class="btn btn-info" href="' . $linksDir . 'members/' . $member['slug'] . '/cancel" role="button">' . $clauses->get('cancel') . '</a>';
 					}
 					elseif (!$isFriend AND $requestPendingFromThem) {
-						echo '<a class="btn btn-success" href="' . $linksDir . 'members/' . $member['slug'] . '/accept" role="button">' . $clauses->get('accept') . '</a>',
+						echo '<a class="btn btn-success" href="' . $linksDir . 'members/' . $member['slug'] . '/accept" role="button" style="border-radius: 0;">' . $clauses->get('accept') . '</a>',
 							 '<a class="btn btn-danger" href="' . $linksDir . 'members/' . $member['slug'] . '/decline" role="button">' . $clauses->get('decline') . '</a>';
 					}
 					else

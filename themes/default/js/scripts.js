@@ -1,4 +1,18 @@
 $(function() {
+	function escapeHtml(text) {
+		var map = {
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#039;'
+		};
+
+		return text.replace(/[&<>"']/g, function(m) {
+			return map[m];
+		});
+	}
+
 	$('button.vote-btn').parent().on('click', 'button.vote-btn', function() {
 		var id = $(this).attr('data-id'),
 			type = $(this).attr('data-type'),
@@ -39,7 +53,9 @@ $(function() {
 			$.ajax({
 				type: 'POST',
 				url: url,
-				data: {query: query},
+				data: {
+					query: query
+				},
 				dataType: 'html',
 				success: function(data) {
 					$("#display-results").html(data).show();
@@ -55,7 +71,9 @@ $(function() {
 
 	// Search for the Left Sidebar
 	var searchFilter = {
-		options: {valueNames: ['name']},
+		options: {
+			valueNames: ['name']
+		},
 		init: function() {
 			var userList = new List('people-list', this.options);
 			var noItems = $('<li id="no-items-found">No items found</li>');
@@ -115,7 +133,7 @@ $(function() {
 		var currentChatBox = '.chat[data-id=' + id + ']',
 			value = $(currentChatBox + ' #message-to-send-' + id).val(),
 			postDate = 'Now',
-			messageBlock = '<li class="clearfix"><div class="message-status align-right"><span class="message-data-time">' + postDate + '</span></div><div class="message other-message pull-right">' + value + '</div></li>';
+			messageBlock = '<li class="clearfix"><div class="message-status align-right"><span class="message-data-time">' + postDate + '</span></div><div class="message other-message pull-right">' + escapeHtml(value) + '</div></li>';
 
 		if (!value)
 			return false;
