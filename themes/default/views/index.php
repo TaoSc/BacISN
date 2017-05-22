@@ -48,8 +48,20 @@
                         <div class="about">
                             <span class="name"><?php echo $member['nickname']; ?></span>
                             <div class="status">
-                                <i class="fa fa-circle online"></i>
-                                <?php echo $clauses->get('online'); ?>
+<?php
+								if ($member['id'] < 3 OR $member['id'] > 14) {
+?>
+									<i class="fa fa-circle online"></i>
+									<?php echo $clauses->get('online'); ?>
+<?php
+								}
+								else {
+?>
+									<i class="fa fa-circle offline"></i>
+									<?php echo $clauses->get('offline'); ?>
+<?php
+								}
+?>
                             </div>
                         </div>
                     </li>

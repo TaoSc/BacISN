@@ -14,5 +14,7 @@
 		else
 			error($clauses->get('message_fail'));
 	}
+	elseif ($ajaxCheck)
+		Messages\Handling::view($params[1]);
 	else
 		error();

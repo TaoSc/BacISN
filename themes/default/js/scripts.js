@@ -61,9 +61,9 @@ $(function() {
 			});
 		}
 	});
-    $( "#display-results").mouseleave(function() {
-    $( "#display-results" ).hide();
-});
+	$("#display-results").mouseleave(function() {
+		$("#display-results").hide();
+	});
 	// Toggle Sidebar
 	$('.chat-header i.fa-bars').click(function() {
 		$('.people-list').toggleClass('sidebar-visible');
@@ -108,15 +108,15 @@ $(function() {
 	});
 
 	// Gather Messages
-	var timer = setInterval(updateMessages, 1000);
+	var timer = setInterval(updateMessages, 3500);
 
 	function updateMessages() {
-		var currentChatBox = '.chat',
-			id = 1;
-
-		$.get(linksDir + 'messages/' + id, function(data) {
-			$(currentChatBox + ' > .chat-history ul').html(data);
-		});
+		for (i = 1; i < 20; i++) {
+			// $('.chat[data-id=' + i + '] > .chat-history ul').append(i);
+			$.get(linksDir + 'messages/' + i, function(data) {
+				$('.chat[data-id=' + i + '] > .chat-history ul').html(data);
+			});
+		}
 	}
 
 	// Send Input on Enter
