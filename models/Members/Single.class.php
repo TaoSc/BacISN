@@ -75,7 +75,7 @@
 			if ($this->member AND Handling::check($newNickname, $newSlug, $newFirstName, $newLastName, $newEmail, $pwdBypass ? '123456' : $newPwd, $nicknameTest, (empty($newBirthDate)) ? '0000-00-01' : $newBirthDate, $namesTest) AND !empty($newType)) {
 				global $siteDir;
 
-				// LE CODE POUR LA PHOTO DE PROFIL N'EST PAS PRÊT
+				// LE CODE POUR LA PHOTO DE PROFIL NE FONCTIONNE PAS
 				$newAvatar = $this->member['avatar_id'];
 
 				// Met à jour les données dans la base de données
@@ -209,7 +209,7 @@
 				$request = \Basics\Site::getDB()->prepare('DELETE FROM friends WHERE (applicant = ? AND acceptor = ?) OR (applicant = ? AND acceptor = ?)');
 				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);
 			}
-			// Supprime la demande et la notification associée sinon
+			// Sinon supprime la demande et la notification associée
 			elseif ($this->requestPending($requestedId, true)) {
 				$request = \Basics\Site::getDB()->prepare('DELETE FROM friend_requests WHERE (from_u = ? AND to_u = ?) OR (from_u = ? AND to_u = ?)');
 				$request->execute([$requestedId, $this->member['id'], $this->member['id'], $requestedId]);

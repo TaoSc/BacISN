@@ -11,7 +11,7 @@
 	// Classes auto-loading
 	spl_autoload_register(function ($class) {
 		global $siteDir;
-		//echo $siteDir . 'models/' .  str_replace('\\', '/', $class) . '.class.php';
+		// echo $siteDir . 'models/' .  str_replace('\\', '/', $class) . '.class.php<br>' . PHP_EOL;
 		if (file_exists($siteDir . 'models/' . str_replace('\\', '/', $class) . '.class.php'))
 			require $siteDir . 'models/' . str_replace('\\', '/', $class) . '.class.php';
 		elseif (file_exists($siteDir . 'models/' . str_replace('\\', '/', $class) . '.php'))
@@ -20,7 +20,7 @@
 
 	// System installation check
 	if (file_exists($configFile))
-		include $configFile;
+		require $configFile;
 	else {
 		die('No configuration file found. Abort.');
 	}

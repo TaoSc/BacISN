@@ -73,6 +73,7 @@ report_bug			= Report a bug
 votes				= Votes
 participants		= Participants
 show_more			= Show more…
+friend_requested	= Friend request from 
 message_placeholder	= Type your message…
 more				= More
 delete				= Delete

@@ -73,6 +73,7 @@ report_bug			= Reporter un bogue
 votes				= votes
 participants		= participants
 show_more			= Voir plus…
+friend_requested	= Demande d'amis de 
 message_placeholder	= Tapez votre message…
 more				= Plus
 delete				= Supprimer
