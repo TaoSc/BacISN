@@ -61,7 +61,9 @@ $(function() {
 			});
 		}
 	});
-
+    $( "#display-results").mouseleave(function() {
+    $( "#display-results" ).hide();
+});
 	// Toggle Sidebar
 	$('.chat-header i.fa-bars').click(function() {
 		$('.people-list').toggleClass('sidebar-visible');
