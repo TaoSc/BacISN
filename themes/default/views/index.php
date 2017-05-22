@@ -38,7 +38,7 @@
             <ul class="list people">
 <?php
                 if (!$friends)
-					echo '<button type="button" class="btn btn-success btn-lg">' . $clauses->get('add_friends') . ' <span class="glyphicon glyphicon-plus"></span></button>';
+					echo '<button type="button" class="btn btn-success btn-lg" onclick="$(\'#search-box\').focus();">' . $clauses->get('add_friends') . ' <span class="glyphicon glyphicon-plus"></span></button>';
 
                 foreach ($friends as $member) {
 ?>

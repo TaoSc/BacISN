@@ -85,10 +85,10 @@
 <?php
                             if (empty($notifications))
                                 echo $clauses->get('you_do_not_have_any_notification');
-                                foreach ($notifications as $notificationLoop)
+                            foreach ($notifications as $notificationLoop)
 								echo '<li>
 									<a href="' . $linksDir . 'members/' . $notificationLoop['sender']['slug'] . '/">
-										friend request from ' . $notificationLoop['sender']['nickname'] . '
+									' . $clauses->get('friend_requested') . $notificationLoop['sender']['nickname'] . '
 									</a>
 								</li>';
 ?>
@@ -129,7 +129,6 @@
 		</div>
 	</footer>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 	<script src="<?php echo $subDir . $theme['dir']; ?>js/scripts.js"></script>
 </body>

@@ -3,12 +3,10 @@ $(function() {
 		var map = {
 			'&': '&amp;',
 			'<': '&lt;',
-			'>': '&gt;',
-			'"': '&quot;',
-			"'": '&#039;'
+			'>': '&gt;'
 		};
 
-		return text.replace(/[&<>"']/g, function(m) {
+		return text.replace(/[&<>]/g, function(m) {
 			return map[m];
 		});
 	}
@@ -108,32 +106,23 @@ $(function() {
 	});
 
 	// Gather Messages
-	/*var url = "tchatAjax.php",
-		memberId = 0,
-		timer = setInterval(getMessages, 5000);
+	var timer = setInterval(updateMessages, 1000);
 
-	function getMessages() {
-		$.post(url, {
-				action: "getMessages",
-				memberId: memberId
-			}, function(data) {
-				if (data.error === "ok") {
-					$("#tchat").append(data.result);
-					memberId = data.memberId;
-				} else {
-					alert(data.error);
-				}
-			},
-			"json");
-		return false;
-	};*/
+	function updateMessages() {
+		var currentChatBox = '.chat',
+			id = 1;
+
+		$.get(linksDir + 'messages/' + id, function(data) {
+			$(currentChatBox + ' > .chat-history ul').html(data);
+		});
+	}
 
 	// Send Input on Enter
 	function sendMessage(id) {
 		var currentChatBox = '.chat[data-id=' + id + ']',
-			value = $(currentChatBox + ' #message-to-send-' + id).val(),
+			value = escapeHtml($(currentChatBox + ' #message-to-send-' + id).val()),
 			postDate = 'Now',
-			messageBlock = '<li class="clearfix"><div class="message-status align-right"><span class="message-data-time">' + postDate + '</span></div><div class="message other-message pull-right">' + escapeHtml(value) + '</div></li>';
+			messageBlock = '<li class="clearfix"><div class="message-status align-right"><span class="message-data-time">' + postDate + '</span></div><div class="message other-message pull-right">' + value + '</div></li>';
 
 		if (!value)
 			return false;
